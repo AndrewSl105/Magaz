@@ -26,12 +26,13 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 // utils
-import fakeRequest from '../../../utils/fakeRequest';
 // routes
 import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
+import { useDispatch } from 'react-redux';
+import { createProduct } from 'src/redux/actions/productActions';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +76,7 @@ ProductNewForm.propTypes = {
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
+  const dispatch = useDispatch()
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -102,7 +104,8 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        await fakeRequest(500);
+        dispatch(createProduct())
+        console.log(true);
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });

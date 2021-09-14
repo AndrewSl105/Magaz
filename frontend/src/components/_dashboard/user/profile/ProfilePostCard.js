@@ -33,6 +33,7 @@ import useAuth from '../../../../hooks/useAuth';
 //
 import MyAvatar from '../../../MyAvatar';
 import EmojiPicker from '../../../EmojiPicker';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,8 @@ export default function ProfilePostCard({ post }) {
   const [likes, setLikes] = useState(post.personLikes.length);
   const [message, setMessage] = useState('');
   const hasComments = post.comments.length > 0;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const handleLike = () => {
     setLiked(true);
@@ -78,7 +81,7 @@ export default function ProfilePostCard({ post }) {
         avatar={<MyAvatar />}
         title={
           <Link to="#" variant="subtitle2" color="text.primary" component={RouterLink}>
-            {user.displayName}
+            {userInfo.name}
           </Link>
         }
         subheader={

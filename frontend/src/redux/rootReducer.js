@@ -9,6 +9,14 @@ import userReducer from './slices/user';
 import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
+import {
+  productCreateReducer,
+  productDeleteReducer,
+  productDetailsReducer,
+  productListReducer,
+  productUpdateReducer
+} from './reducers/productReducers';
+import { userLoginReducer } from './reducers/userReducers';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +39,12 @@ const rootReducer = combineReducers({
   chat: chatReducer,
   blog: blogReducer,
   user: userReducer,
+  productList: productListReducer,
+  userLogin: userLoginReducer,
+  productDetails: productDetailsReducer,
+  productDelete: productDeleteReducer,
+  productCreate: productCreateReducer,
+  productUpdate: productUpdateReducer,
   calendar: calendarReducer,
   kanban: kanbanReducer,
   product: persistReducer(productPersistConfig, productReducer)

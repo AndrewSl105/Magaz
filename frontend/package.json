@@ -1,6 +1,7 @@
 {
-  "name": "@minimal/minimal-kit-react",
-  "author": "minimals.cc",
+  "name": "frontend",
+  "proxy": "http://127.0.0.1:5000",
+  "author": "Andrey Slipchenko",
   "version": "2.5.0",
   "private": true,
   "scripts": {

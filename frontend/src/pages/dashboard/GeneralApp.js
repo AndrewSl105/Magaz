@@ -20,19 +20,22 @@ import {
   AppTotalActiveUsers,
   AppTopInstalledCountries
 } from '../../components/_dashboard/general-app';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
   const { themeStretch } = useSettings();
   const { user } = useAuth();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   return (
     <Page title="General: App | Minimal-UI">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Grid container spacing={3}>
           <Grid item xs={12} md={8}>
-            <AppWelcome displayName={user.displayName} />
+            <AppWelcome displayName={userInfo.name} />
           </Grid>
 
           <Grid item xs={12} md={4}>

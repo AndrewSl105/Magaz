@@ -3,20 +3,20 @@ import useAuth from '../hooks/useAuth';
 //
 import { MAvatar } from './@material-extend';
 import createAvatar from '../utils/createAvatar';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
 export default function MyAvatar({ ...other }) {
   const { user } = useAuth();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   return (
     <MAvatar
-      src={user.photoURL}
-      alt={user.displayName}
-      color={user.photoURL ? 'default' : createAvatar(user.displayName).color}
-      {...other}
+      alt={userInfo.name}
     >
-      {createAvatar(user.displayName).name}
+      {createAvatar(userInfo.name).name}
     </MAvatar>
   );
 }

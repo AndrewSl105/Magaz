@@ -6,6 +6,7 @@ import { Box, Typography } from '@material-ui/core';
 import useAuth from '../../../../hooks/useAuth';
 //
 import MyAvatar from '../../../MyAvatar';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +56,8 @@ ProfileCover.propTypes = {
 export default function ProfileCover({ myProfile }) {
   const { user } = useAuth();
   const { position, cover } = myProfile;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   return (
     <RootStyle>
@@ -77,7 +80,7 @@ export default function ProfileCover({ myProfile }) {
             textAlign: { xs: 'center', md: 'left' }
           }}
         >
-          <Typography variant="h4">{user.displayName}</Typography>
+          <Typography variant="h4">{userInfo.name}</Typography>
           <Typography sx={{ opacity: 0.72 }}>{position}</Typography>
         </Box>
       </InfoStyle>

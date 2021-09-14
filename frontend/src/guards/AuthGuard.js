@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import useAuth from '../hooks/useAuth';
 // pages
 import Login from '../pages/authentication/Login';
+import { useSelector } from 'react-redux'
 
 // ----------------------------------------------------------------------
 
@@ -13,11 +14,12 @@ AuthGuard.propTypes = {
 };
 
 export default function AuthGuard({ children }) {
-  const { isAuthenticated } = useAuth();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState(null);
 
-  if (!isAuthenticated) {
+  if (!userInfo) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
