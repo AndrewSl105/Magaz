@@ -49,7 +49,6 @@ export default function AccountPopover() {
   const { user, logout } = useAuth();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
-  console.log(userInfo);
   const [open, setOpen] = useState(false);
 
   const handleOpen = () => {

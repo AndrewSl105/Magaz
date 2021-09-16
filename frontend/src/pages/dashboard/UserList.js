@@ -90,6 +90,10 @@ export default function UserList() {
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const userLis = useSelector((state) => state.userList)
+  const { loading, error, users } = userList;
+  console.log(userLis)
+
   useEffect(() => {
     dispatch(getUserList());
   }, [dispatch]);

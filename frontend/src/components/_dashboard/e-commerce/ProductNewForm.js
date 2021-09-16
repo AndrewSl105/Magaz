@@ -96,16 +96,20 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       price: currentProduct?.price || '',
       priceSale: currentProduct?.priceSale || '',
       tags: currentProduct?.tags || [TAGS_OPTION[0]],
-      inStock: Boolean(currentProduct?.inventoryType !== 'out_of_stock'),
-      taxes: true,
       gender: currentProduct?.gender || GENDER_OPTION[2],
       category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
-        dispatch(createProduct())
-        console.log(true);
+        dispatch(createProduct({
+          name: values.name,
+          price: values.price,
+          description: values.description,
+          gallery: values.images,
+          sku: values.sku,
+          gender: values.gender
+        }));
         resetForm();
         setSubmitting(false);
         enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
@@ -115,10 +119,12 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         setSubmitting(false);
         setErrors(error);
       }
-    }
+    } 
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+
+  console.log(values.images);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {

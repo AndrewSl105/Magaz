@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux';
+import { combineReducers } from 'redux'
 import { persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 // slices
@@ -16,6 +16,10 @@ import {
   productListReducer,
   productUpdateReducer
 } from './reducers/productReducers';
+import {
+  userListReducer
+} from './reducers/userReducers';
+
 import { userLoginReducer } from './reducers/userReducers';
 
 // ----------------------------------------------------------------------
@@ -41,6 +45,7 @@ const rootReducer = combineReducers({
   user: userReducer,
   productList: productListReducer,
   userLogin: userLoginReducer,
+  userList: userListReducer,
   productDetails: productDetailsReducer,
   productDelete: productDeleteReducer,
   productCreate: productCreateReducer,

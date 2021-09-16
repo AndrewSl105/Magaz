@@ -23,6 +23,7 @@ import { UploadAvatar } from '../../../upload';
 import { fData } from '../../../../utils/formatNumber';
 //
 import countries from '../countries';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,8 @@ export default function AccountGeneral() {
   const isMountedRef = useIsMountedRef();
   const { enqueueSnackbar } = useSnackbar();
   const { user, updateProfile } = useAuth();
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const UpdateUserSchema = Yup.object().shape({
     displayName: Yup.string().required('Name is required')
@@ -38,17 +41,13 @@ export default function AccountGeneral() {
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      displayName: user.displayName || '',
-      email: user.email,
-      photoURL: user.photoURL,
-      phoneNumber: user.phoneNumber,
-      country: user.country,
-      address: user.address,
-      state: user.state,
-      city: user.city,
-      zipCode: user.zipCode,
-      about: user.about,
-      isPublic: user.isPublic
+      displayName: userInfo.name || '',
+      email: userInfo.email,
+      phoneNumber: userInfo.phoneNumber,
+      country: userInfo.language,
+      address: userInfo.deliveryInfo.deliveryAddress,
+      city: userInfo.deliveryInfo.city,
+      about: userInfo.gender,
     },
 
     validationSchema: UpdateUserSchema,
