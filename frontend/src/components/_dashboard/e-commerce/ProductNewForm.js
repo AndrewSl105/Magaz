@@ -2,8 +2,10 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
+import React, { useState } from 'react'
 // material
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
@@ -33,6 +35,7 @@ import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
 import { useDispatch } from 'react-redux';
 import { createProduct } from 'src/redux/actions/productActions';
+import s3FileUpload from 'react-s3';
 
 // ----------------------------------------------------------------------
 
@@ -85,6 +88,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     price: Yup.number().required('Price is required')
   });
 
+  const config = {
+    bucketName: 'shopimagescommerce',
+    region: 'EU (Frankfurt) eu-central-1',
+    accessKeyId: 'AKIASET7NWTOSZKCTFGF',
+    secretAccessKey: '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',
+  };
+
+  const handleUpload = async (e) => {
+    e.map(el => s3FileUpload.uploadFile(el, config));
+  };
+
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -102,6 +116,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
       try {
+        console.log(handleUpload(values.images));
         dispatch(createProduct({
           name: values.name,
           price: values.price,
@@ -122,9 +137,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     } 
   });
 
+  const [uploading, setUploading] = React.useState(false)
+  const [image, setImage] = useState('')
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
-
-  console.log(values.images);
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -149,6 +164,30 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     setFieldValue('images', filteredItems);
   };
 
+  console.log(values.images)
+
+  const setUpload = async (e) => {
+    const file = e.target.files[0]
+    setUploading(true)
+    console.log(file);
+
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+
+      const { data } = await axios.post('/api/upload', file, config)
+
+      setImage(data)
+      setUploading(false)
+    } catch (error) {
+      console.error(error)
+      setUploading(false)
+    }
+  }
+
   return (
     <FormikProvider value={formik}>
       <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
@@ -156,6 +195,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
           <Grid item xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
+              <input type="file" name="img" multiple onChange={setUpload} />
                 <TextField
                   fullWidth
                   label="Product Name"

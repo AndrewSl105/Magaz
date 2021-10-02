@@ -39,6 +39,9 @@ const productSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    from: {
+      type: String,
+    },
     sku: {
       type: String,
     },

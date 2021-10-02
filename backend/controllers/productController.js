@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import Product from '../models/productModel.js'
+import axios from 'axios'
 
 // @desc    Fetch all products
 // @route   GET /api/products
@@ -179,15 +180,21 @@ const createProduct = asyncHandler(async (req, res) => {
     gender
   } = req.body;
 
-  const mapGallery = gallery.map(el => el.preview);
+  console.log(gallery);
 
-  console.log(mapGallery)
+  const config = {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  }
+
+  const { data } = await axios.post('/api/upload', gallery, config)
 
   const product = new Product({
     name: name,
     sku: sku,
     price: price,
-    gallery: mapGallery,
+    gallery: data,
     hashtags: [],
     user: req.user._id,
     brand: 'Sample brand',

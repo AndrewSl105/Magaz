@@ -1,41 +1,28 @@
 import path from 'path'
 import express from 'express'
 import multer from 'multer'
+import AWS from 'aws-sdk'
+
+const uploadImages = (async (req, res) => {
+  console.log(true)
+})
+
 const router = express.Router()
 
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
-    )
-  },
-})
-
-function checkFileType(file, cb) {
-  const filetypes = /jpg|jpeg|png|webp/
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
-  const mimetype = filetypes.test(file.mimetype)
-
-  if (extname && mimetype) {
-    return cb(null, true)
-  } else {
-    cb('Images only!')
+const storage = multer.memoryStorage({
+  destination: function(req, file, callback) {
+    callback(null, '');
   }
-}
+});
 
-const upload = multer({
-  storage,
-  fileFilter: function (req, file, cb) {
-    checkFileType(file, cb)
-  },
-})
+const multipleUpload = multer({ storage: storage }).array('file');
+const upload = multer({ storage: storage }).single('file');
 
-router.post('/', upload.single('image'), (req, res) => {
-  res.send(`/${req.file.path}`)
-})
+const BUCKET_NAME = 'shopimagescommerce';
+const IAM_USER_KEY = 'AKIASET7NWTOSZKCTFGF';
+const IAM_USER_SECRET = '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';
+
+
+router.post('/upload').post(uploadImages)
 
 export default router
