@@ -95,15 +95,6 @@ export default function ShopTagFiltered({ formik, filters, isShowReset, isDefaul
         <WrapperStyle>
           <LabelStyle>Gender:</LabelStyle>
           <Stack direction="row" flexWrap="wrap" sx={{ p: 0.75 }}>
-            {gender.map((_gender) => (
-              <Chip
-                key={_gender}
-                label={_gender}
-                size="small"
-                onDelete={() => handleRemoveGender(_gender)}
-                sx={{ m: 0.5 }}
-              />
-            ))}
           </Stack>
         </WrapperStyle>
       )}

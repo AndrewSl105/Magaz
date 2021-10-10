@@ -23,7 +23,10 @@ import {
   PRODUCT_TOP_FAIL,
   PRODUCT_CATEGORIES_REQUEST,
   PRODUCT_CATEGORIES_SUCCESS,
-  PRODUCT_CATEGORIES_FAIL
+  PRODUCT_CATEGORIES_FAIL,
+  PRODUCT_HASHTAGS_REQUEST,
+  PRODUCT_HASHTAGS_SUCCESS,
+  PRODUCT_HASHTAGS_FAIL
 } from '../constants/productConstants'
 import { logout } from './userActions'
 
@@ -64,11 +67,36 @@ export const listCategories = () => async (
       payload: data,
     })
 
-        console.log(data);
+      console.log(data);
 
   } catch (error) {
     dispatch({
       type: PRODUCT_CATEGORIES_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const listHashtags = () => async (
+  dispatch
+) => {
+  try {
+    dispatch({ type: PRODUCT_HASHTAGS_REQUEST })
+    const { data } = await axios.get(
+      `/api/products/hashtags`
+    )
+    
+    dispatch({
+      type: PRODUCT_HASHTAGS_SUCCESS,
+      payload: data,
+    })
+
+  } catch (error) {
+    dispatch({
+      type: PRODUCT_HASHTAGS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

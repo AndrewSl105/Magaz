@@ -25,7 +25,11 @@ import {
   PRODUCT_TOP_FAIL,
   PRODUCT_CATEGORIES_REQUEST,
   PRODUCT_CATEGORIES_SUCCESS,
-  PRODUCT_CATEGORIES_FAIL
+  PRODUCT_CATEGORIES_FAIL,
+  PRODUCT_HASHTAGS_REQUEST,
+  PRODUCT_HASHTAGS_SUCCESS,
+  PRODUCT_HASHTAGS_FAIL
+
 } from '../constants/productConstants';
 
 export const productListReducer = (state = { products: [] }, action) => {
@@ -56,6 +60,22 @@ export const categoriesListReducer = (state = { categories: [] }, action) => {
         categories: action.payload
       };
     case PRODUCT_CATEGORIES_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const hashTagsListReducer = (state = { hashtags: [] }, action) => {
+  switch (action.type) {
+    case PRODUCT_HASHTAGS_REQUEST:
+      return { loading: true, hashtags: [] };
+    case PRODUCT_HASHTAGS_SUCCESS:
+      return {
+        loading: false,
+        hashtags: action.payload
+      };
+    case PRODUCT_HASHTAGS_FAIL:
       return { loading: false, error: action.payload };
     default:
       return state;

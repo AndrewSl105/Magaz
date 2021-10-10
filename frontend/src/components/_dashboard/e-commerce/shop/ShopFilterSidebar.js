@@ -168,11 +168,7 @@ export default function ShopFilterSidebar({ isOpenFilter, onResetFilter, onOpenF
                         label="& Up"
                         sx={{
                           my: 0.5,
-                          borderRadius: 1,
-                          '&:hover': { opacity: 0.48 },
-                          ...(values.rating.includes(item) && {
-                            bgcolor: 'action.selected'
-                          })
+                          borderRadius: 1
                         }}
                       />
                     ))}

@@ -177,32 +177,28 @@ const createProduct = asyncHandler(async (req, res) => {
     price,
     sku,
     gallery,
-    gender
+    gender,
+    category,
+    hashtags,
+    visibility,
+    description,
+    from
   } = req.body;
-
-  console.log(gallery);
-
-  const config = {
-    headers: {
-      'Content-Type': 'multipart/form-data',
-    },
-  }
-
-  const { data } = await axios.post('/api/upload', gallery, config)
 
   const product = new Product({
     name: name,
+    from: from,
     sku: sku,
     price: price,
-    gallery: data,
-    hashtags: [],
+    gallery: gallery,
+    hashtags: hashtags,
     user: req.user._id,
     brand: 'Sample brand',
-    category: [],
+    category: category,
     subcategory: [],
     numReviews: 0,
-    description: '',
-    visibility: false,
+    description: description,
+    visibility: visibility,
     rating: 0,
     country: '',
     gender: gender

@@ -2,10 +2,10 @@ import * as Yup from 'yup';
 import PropTypes from 'prop-types';
 import { useSnackbar } from 'notistack5';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
 import { useCallback } from 'react';
 import { Form, FormikProvider, useFormik } from 'formik';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { listCategories, listHashtags } from '../../../redux/actions/productActions'
 // material
 import { styled } from '@material-ui/core/styles';
 import { LoadingButton } from '@material-ui/lab';
@@ -25,7 +25,8 @@ import {
   Autocomplete,
   InputAdornment,
   FormHelperText,
-  FormControlLabel
+  FormControlLabel,
+  imageListItemBarClasses
 } from '@material-ui/core';
 // utils
 // routes
@@ -33,9 +34,10 @@ import { PATH_DASHBOARD } from '../../../routes/paths';
 //
 import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { createProduct } from 'src/redux/actions/productActions';
-import s3FileUpload from 'react-s3';
+import { uploadFile }  from 'react-s3';
+import { Button } from '@material-ui/core';
 
 // ----------------------------------------------------------------------
 
@@ -45,22 +47,6 @@ const CATEGORY_OPTION = [
   { group: 'Clothing', classify: ['Shirts', 'T-shirts', 'Jeans', 'Leather'] },
   { group: 'Tailored', classify: ['Suits', 'Blazers', 'Trousers', 'Waistcoats'] },
   { group: 'Accessories', classify: ['Shoes', 'Backpacks and bags', 'Bracelets', 'Face masks'] }
-];
-
-const TAGS_OPTION = [
-  'Toy Story 3',
-  'Logan',
-  'Full Metal Jacket',
-  'Dangal',
-  'The Sting',
-  '2001: A Space Odyssey',
-  "Singin' in the Rain",
-  'Toy Story',
-  'Bicycle Thieves',
-  'The Kid',
-  'Inglourious Basterds',
-  'Snatch',
-  '3 Idiots'
 ];
 
 const LabelStyle = styled(Typography)(({ theme }) => ({
@@ -77,9 +63,26 @@ ProductNewForm.propTypes = {
 };
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
+
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+
+  
+  const productCreate = useSelector((state) => state.productCreate)
+  const { success, error } = productCreate;
+  console.log(success);
+
+  useEffect(() => {
+    dispatch(listCategories())
+    dispatch(listHashtags())
+  }, [dispatch])
+  const [imagesUrls, setImagesUrls] = useState([]);
+
+  const categoriesList = useSelector((state) => state.categories);
+  const hashtagsList = useSelector((state) => state.hashtags);
+  const { categories } = categoriesList;
+  const { hashtags } = hashtagsList;
 
   const NewProductSchema = Yup.object().shape({
     name: Yup.string().required('Name is required'),
@@ -88,16 +91,17 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     price: Yup.number().required('Price is required')
   });
 
-  const config = {
-    bucketName: 'shopimagescommerce',
-    region: 'EU (Frankfurt) eu-central-1',
-    accessKeyId: 'AKIASET7NWTOSZKCTFGF',
-    secretAccessKey: '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',
-  };
+  const S3_BUCKET ='shopimagescommerce';
+  const REGION ='eu-central-1';
+  const ACCESS_KEY ='AKIASET7NWTOSZKCTFGF';
+  const SECRET_ACCESS_KEY ='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';
 
-  const handleUpload = async (e) => {
-    e.map(el => s3FileUpload.uploadFile(el, config));
-  };
+  const config = {
+    bucketName: S3_BUCKET,
+    region: REGION,
+    accessKeyId: ACCESS_KEY,
+    secretAccessKey: SECRET_ACCESS_KEY,
+  }
 
   const formik = useFormik({
     enableReinitialize: true,
@@ -105,30 +109,49 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       name: currentProduct?.name || '',
       description: currentProduct?.description || '',
       images: currentProduct?.images || [],
-      code: currentProduct?.code || '',
+      from: currentProduct?.from || '',
       sku: currentProduct?.sku || '',
       price: currentProduct?.price || '',
       priceSale: currentProduct?.priceSale || '',
-      tags: currentProduct?.tags || [TAGS_OPTION[0]],
+      tags: currentProduct?.tags || [hashtags[0]],
       gender: currentProduct?.gender || GENDER_OPTION[2],
-      category: currentProduct?.category || CATEGORY_OPTION[0].classify[1]
+      category: currentProduct?.category || [categories[0]],
+      visibility: currentProduct?.visibility || false
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
+
+      const handleUpload = async (file) => {
+        return await uploadFile(file, config).then(result => result) || null;
+      }
+
+      const getImage = await handleUpload(values.images[0]);
+      const urls = imagesUrls.map(el => el.path) || [];
+      const gallery = [...urls, getImage.location];
+      console.log(gallery);
+
       try {
-        console.log(handleUpload(values.images));
-        dispatch(createProduct({
-          name: values.name,
-          price: values.price,
-          description: values.description,
-          gallery: values.images,
-          sku: values.sku,
-          gender: values.gender
-        }));
-        resetForm();
-        setSubmitting(false);
-        enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-        navigate(PATH_DASHBOARD.eCommerce.list);
+          dispatch(createProduct({
+            name: values.name,
+            price: values.price,
+            description: values.description,
+            gallery: gallery,
+            sku: values.sku,
+            gender: values.gender,
+            from: values.from,
+            category: values.category,
+            hashtags: values.tags,
+            visibility: values.visibility
+          }));
+
+          if (success) {
+            resetForm();
+            setSubmitting(false);
+            setImagesUrls([]);
+            enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
+          } else if (error) {
+            enqueueSnackbar(!isEdit ? 'Unsuccessfull creacte!' : 'Update success', { variant: 'error' });
+          }
       } catch (error) {
         console.error(error);
         setSubmitting(false);
@@ -137,8 +160,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     } 
   });
 
-  const [uploading, setUploading] = React.useState(false)
-  const [image, setImage] = useState('')
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
   const handleDrop = useCallback(
@@ -157,36 +178,42 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const handleRemoveAll = () => {
     setFieldValue('images', []);
+    setImagesUrls([])
   };
 
   const handleRemove = (file) => {
     const filteredItems = values.images.filter((_file) => _file !== file);
     setFieldValue('images', filteredItems);
   };
+  
+  const fromVariants = [
+    {title: 'ms drop', value: 'https/drop.com', type: 'site'},
+    {title: 'google form', value: 'https/google.com', type: 'table'}
+  ]
 
-  console.log(values.images)
+  const [imageUrl, setImageUrl] = useState();
 
-  const setUpload = async (e) => {
-    const file = e.target.files[0]
-    setUploading(true)
-    console.log(file);
+  const handleChange = (event) => {
+    setImageUrl(event.target.value);
+  };
 
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
+ // console.log(values);
+
+  const addToImagesHandler = () => {
+    const updatedUrls = [
+      ...imagesUrls,
+      {
+        name: `name-${imageUrl}`,
+        path: imageUrl,
+        location: imageUrl,
+        preview: `${imageUrl}`,
+        key: imageUrl + new Date(),
       }
+    ];
+    setImagesUrls(updatedUrls)
+  };
 
-      const { data } = await axios.post('/api/upload', file, config)
-
-      setImage(data)
-      setUploading(false)
-    } catch (error) {
-      console.error(error)
-      setUploading(false)
-    }
-  }
+  const allImages = imagesUrls.concat(values.images);
 
   return (
     <FormikProvider value={formik}>
@@ -195,7 +222,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
           <Grid item xs={12} md={8}>
             <Card sx={{ p: 3 }}>
               <Stack spacing={3}>
-              <input type="file" name="img" multiple onChange={setUpload} />
                 <TextField
                   fullWidth
                   label="Product Name"
@@ -222,22 +248,37 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
                 <div>
                   <LabelStyle>Add Images</LabelStyle>
-                  <UploadMultiFile
-                    showPreview
-                    maxSize={3145728}
-                    accept="image/*"
-                    files={values.images}
-                    onDrop={handleDrop}
-                    onRemove={handleRemove}
-                    onRemoveAll={handleRemoveAll}
-                    error={Boolean(touched.images && errors.images)}
-                  />
+                    <UploadMultiFile
+                      showPreview
+                      maxSize={3145728}
+                      accept="image/*"
+                      files={allImages}
+                      onDrop={handleDrop}
+                      onRemove={handleRemove}
+                      onRemoveAll={handleRemoveAll}
+                      error={Boolean(touched.images && errors.images)}
+                    />
                   {touched.images && errors.images && (
                     <FormHelperText error sx={{ px: 2 }}>
                       {touched.images && errors.images}
                     </FormHelperText>
                   )}
                 </div>
+
+                <TextField
+                    fullWidth
+                    label="Image Url"
+                    onChange={handleChange}
+                    InputProps={{
+                      endAdornment:
+                      <span onClick={() => setImageUrl()} style={{cursor: 'pointer'}}>Clear </span>
+                    }}
+                  />
+
+                <Button variant="contained" color="primary" onClick={addToImagesHandler}  >
+                    Add image Url
+                </Button>
+
               </Stack>
             </Card>
           </Grid>
@@ -246,13 +287,21 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             <Stack spacing={3}>
               <Card sx={{ p: 3 }}>
                 <FormControlLabel
-                  control={<Switch {...getFieldProps('inStock')} checked={values.inStock} />}
-                  label="In stock"
+                  control={<Switch {...getFieldProps('visibility')} checked={values.visibility} />}
+                  label="Visibility"
                   sx={{ mb: 2 }}
                 />
 
                 <Stack spacing={3}>
-                  <TextField fullWidth label="Product Code" {...getFieldProps('code')} />
+                  <Autocomplete
+                    fullWidth
+                    options={fromVariants}
+                    getOptionLabel={(option) => option.title}
+                    onChange={(event, newValue) => {
+                      setFieldValue('from', newValue.value);
+                    }}
+                    renderInput={(params) => <TextField fullWidth label="From" {...params}  />}
+                  />
                   <TextField fullWidth label="Product SKU" {...getFieldProps('sku')} />
 
                   <div>
@@ -269,14 +318,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                   <FormControl fullWidth>
                     <InputLabel>Category</InputLabel>
                     <Select label="Category" native {...getFieldProps('category')} value={values.category}>
-                      {CATEGORY_OPTION.map((category) => (
-                        <optgroup key={category.group} label={category.group}>
-                          {category.classify.map((classify) => (
-                            <option key={classify} value={classify}>
-                              {classify}
-                            </option>
-                          ))}
-                        </optgroup>
+                      {categories.map((category) => (
+                          <option label={category} value={category}>
+                            {category}
+                          </option>
                       ))}
                     </Select>
                   </FormControl>
@@ -287,7 +332,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                     onChange={(event, newValue) => {
                       setFieldValue('tags', newValue);
                     }}
-                    options={TAGS_OPTION.map((option) => option)}
+                    options={hashtags.map((option) => option)}
                     renderTags={(value, getTagProps) =>
                       value.map((option, index) => (
                         <Chip key={option} size="small" label={option} {...getTagProps({ index })} />

@@ -38,7 +38,8 @@ const menuConfig = [
           { title: 'Pricing', path: PATH_PAGE.pricing },
           { title: 'Payment', path: PATH_PAGE.payment },
           { title: 'Maintenance', path: PATH_PAGE.maintenance },
-          { title: 'Coming Soon', path: PATH_PAGE.comingSoon }
+          { title: 'Coming Soon', path: PATH_PAGE.comingSoon },
+          { title: 'Products', path: PATH_PAGE.products }
         ]
       },
       {

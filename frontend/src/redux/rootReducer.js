@@ -10,11 +10,13 @@ import productReducer from './slices/product';
 import calendarReducer from './slices/calendar';
 import kanbanReducer from './slices/kanban';
 import {
+  categoriesListReducer,
   productCreateReducer,
   productDeleteReducer,
   productDetailsReducer,
   productListReducer,
-  productUpdateReducer
+  productUpdateReducer,
+  hashTagsListReducer
 } from './reducers/productReducers';
 import {
   userListReducer
@@ -44,6 +46,8 @@ const rootReducer = combineReducers({
   blog: blogReducer,
   user: userReducer,
   productList: productListReducer,
+  categories: categoriesListReducer,
+  hashtags: hashTagsListReducer,
   userLogin: userLoginReducer,
   userList: userListReducer,
   productDetails: productDetailsReducer,

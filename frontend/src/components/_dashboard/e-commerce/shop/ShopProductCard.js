@@ -10,7 +10,6 @@ import { PATH_DASHBOARD } from '../../../../routes/paths';
 import { fCurrency } from '../../../../utils/formatNumber';
 //
 import Label from '../../../Label';
-import ColorPreview from '../../../ColorPreview';
 
 // ----------------------------------------------------------------------
 
@@ -29,8 +28,16 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale } = product;
+  const { name, cover, price, colors, status, priceSale, gallery } = product;
   const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(name)}`;
+  console.log(product);
+  let image;
+
+  if (gallery === undefined) {
+    image = cover;
+  } else {
+    image = gallery[0]
+  }
 
   return (
     <Card>
@@ -50,7 +57,7 @@ export default function ShopProductCard({ product }) {
             {status}
           </Label>
         )}
-        <ProductImgStyle alt={name} src={cover} />
+        <ProductImgStyle alt={name} src={image} />
       </Box>
 
       <Stack spacing={2} sx={{ p: 3 }}>
@@ -61,7 +68,6 @@ export default function ShopProductCard({ product }) {
         </Link>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between">
-          <ColorPreview colors={colors} />
           <Typography variant="subtitle1">
             <Typography
               component="span"

@@ -10,6 +10,7 @@ import AuthGuard from '../guards/AuthGuard';
 // import RoleBasedGuard from '../guards/RoleBasedGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
+import ProductsScreen from 'src/pages/ProductsScreen';
 
 // ----------------------------------------------------------------------
 
@@ -148,6 +149,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
+        { path: 'produts', element: <ProductsScreen /> },
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
