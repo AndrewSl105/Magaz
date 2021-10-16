@@ -143,13 +143,10 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             hashtags: values.tags,
             visibility: values.visibility
           }));
-
-          if (success) {
-            resetForm();
             setSubmitting(false);
             setImagesUrls([]);
             enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
-          } else if (error) {
+          if (error) {
             enqueueSnackbar(!isEdit ? 'Unsuccessfull creacte!' : 'Update success', { variant: 'error' });
           }
       } catch (error) {

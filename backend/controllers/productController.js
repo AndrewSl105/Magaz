@@ -11,7 +11,6 @@ const { keyword, hashtags, brand, category, gender } = req.query;
 const pageSize = 5;
 const page = Number(req.query.pageNumber) || 1;
 const count = await Product.countDocuments();
-console.log(req)
 
 if (keyword) {
   const keyword = req.query.keyword
@@ -66,6 +65,7 @@ if (category && gender && !brand) {
 }
 
 if (category && !gender && !brand) {
+  console.log(category)
   const categoryArr = category.split(",")
   const count = await Product.countDocuments( {$and:[
     {"category":{ "$in": categoryArr }},

@@ -61,13 +61,10 @@ export const listCategories = () => async (
     const { data } = await axios.get(
       `/api/products/categories`
     )
-    console.log(data);
     dispatch({
       type: PRODUCT_CATEGORIES_SUCCESS,
       payload: data,
     })
-
-      console.log(data);
 
   } catch (error) {
     dispatch({

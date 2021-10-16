@@ -117,24 +117,15 @@ export default function ProductDetailsSumary() {
   const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { product, checkout } = useSelector((state) => state.product);
+  const { product } = useSelector((state) => state.productDetails);
   const {
     id,
     name,
-    sizes,
     price,
-    cover,
-    status,
-    colors,
-    available,
-    priceSale,
-    totalRating,
-    totalReview,
-    inventoryType
   } = product;
 
-  const alreadyProduct = checkout.cart.map((item) => item.id).includes(id);
-  const isMaxQuantity = checkout.cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
+  //const alreadyProduct = checkout.cart.map((item) => item.id).includes(id);
+  //const isMaxQuantity = checkout.cart.filter((item) => item.id === id).map((item) => item.quantity)[0] >= available;
 
   const onAddCart = (product) => {
     dispatch(addCart(product));
@@ -149,21 +140,10 @@ export default function ProductDetailsSumary() {
     initialValues: {
       id,
       name,
-      cover,
-      available,
       price,
-      color: colors[0],
-      size: sizes[4],
-      quantity: available < 1 ? 0 : 1
     },
     onSubmit: async (values, { setSubmitting }) => {
       try {
-        if (!alreadyProduct) {
-          onAddCart({
-            ...values,
-            subtotal: values.price * values.quantity
-          });
-        }
         setSubmitting(false);
         handleBuyNow();
         navigate(PATH_DASHBOARD.eCommerce.checkout);
@@ -186,40 +166,23 @@ export default function ProductDetailsSumary() {
     <RootStyle>
       <FormikProvider value={formik}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-          <Label
-            variant={theme.palette.mode === 'light' ? 'ghost' : 'filled'}
-            color={inventoryType === 'in_stock' ? 'success' : 'error'}
-            sx={{ textTransform: 'uppercase' }}
-          >
-            {sentenceCase(inventoryType)}
-          </Label>
-          <Typography
-            variant="overline"
-            sx={{
-              mt: 2,
-              mb: 1,
-              display: 'block',
-              color: status === 'sale' ? 'error.main' : 'info.main'
-            }}
-          >
-            {status}
-          </Typography>
+
 
           <Typography variant="h5" paragraph>
             {name}
           </Typography>
 
           <Stack spacing={0.5} direction="row" alignItems="center" sx={{ mb: 2 }}>
-            <Rating value={totalRating} precision={0.1} readOnly />
+            <Rating value={3} precision={0.1} readOnly />
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-              ({fShortenNumber(totalReview)}
+              ({fShortenNumber(3)}
               reviews)
             </Typography>
           </Stack>
 
           <Typography variant="h4" sx={{ mb: 3 }}>
             <Box component="span" sx={{ color: 'text.disabled', textDecoration: 'line-through' }}>
-              {priceSale && fCurrency(priceSale)}
+              {price && fCurrency(price)}
             </Box>
             &nbsp;{fCurrency(price)}
           </Typography>
@@ -231,16 +194,6 @@ export default function ProductDetailsSumary() {
               <Typography variant="subtitle1" sx={{ mt: 0.5 }}>
                 Color
               </Typography>
-              <ColorSinglePicker
-                {...getFieldProps('color')}
-                colors={colors}
-                sx={{
-                  ...(colors.length > 4 && {
-                    maxWidth: 144,
-                    justifyContent: 'flex-end'
-                  })
-                }}
-              />
             </Stack>
 
             <Stack direction="row" justifyContent="space-between">
@@ -265,11 +218,6 @@ export default function ProductDetailsSumary() {
                   </Link>
                 }
               >
-                {sizes.map((size) => (
-                  <option key={size} value={size}>
-                    {size}
-                  </option>
-                ))}
               </TextField>
             </Stack>
 
@@ -278,7 +226,7 @@ export default function ProductDetailsSumary() {
                 Quantity
               </Typography>
               <div>
-                <Incrementer name="quantity" available={available} />
+                <Incrementer name="quantity" available={true} />
                 <Typography
                   variant="caption"
                   sx={{
@@ -288,10 +236,8 @@ export default function ProductDetailsSumary() {
                     color: 'text.secondary'
                   }}
                 >
-                  Available: {available}
+                  Available: 
                 </Typography>
-
-                <FormHelperText error>{touched.quantity && errors.quantity}</FormHelperText>
               </div>
             </Stack>
           </Stack>
@@ -300,7 +246,6 @@ export default function ProductDetailsSumary() {
           <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }} sx={{ mt: 5 }}>
             <Button
               fullWidth
-              disabled={isMaxQuantity}
               size="large"
               type="button"
               color="warning"

@@ -11,6 +11,7 @@ import AuthGuard from '../guards/AuthGuard';
 // components
 import LoadingScreen from '../components/LoadingScreen';
 import ProductsScreen from 'src/pages/ProductsScreen';
+import CategoriesScreen from 'src/pages/CategoriesScreen';
 
 // ----------------------------------------------------------------------
 
@@ -149,7 +150,9 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'produts', element: <ProductsScreen /> },
+        { path: 'products/page/:pageNumber', element: <ProductsScreen /> },
+        { path: 'categories', element: <CategoriesScreen /> },
+        { path: 'productDetails/:id', element: <EcommerceProductDetails /> },
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },

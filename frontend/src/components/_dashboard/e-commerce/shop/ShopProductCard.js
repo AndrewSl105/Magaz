@@ -28,9 +28,8 @@ ShopProductCard.propTypes = {
 };
 
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, colors, status, priceSale, gallery } = product;
-  const linkTo = `${PATH_DASHBOARD.eCommerce.root}/product/${paramCase(name)}`;
-  console.log(product);
+  const { name, cover, price, colors, status, priceSale, gallery, _id } = product;
+  const linkTo = `/productDetails/${paramCase(_id)}`;
   let image;
 
   if (gallery === undefined) {

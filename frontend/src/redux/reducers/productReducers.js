@@ -37,6 +37,8 @@ export const productListReducer = (state = { products: [] }, action) => {
     case PRODUCT_LIST_REQUEST:
       return { loading: true, products: [] };
     case PRODUCT_LIST_SUCCESS:
+      console.log(action.payload.products, action.payload.pages, action.payload.page)
+
       return {
         loading: false,
         products: action.payload.products,
@@ -82,7 +84,7 @@ export const hashTagsListReducer = (state = { hashtags: [] }, action) => {
   }
 };
 
-export const productDetailsReducer = (state = { product: { reviews: [] } }, action) => {
+export const productDetailsReducer = (state = { }, action) => {
   switch (action.type) {
     case PRODUCT_DETAILS_REQUEST:
       return { ...state, loading: true };

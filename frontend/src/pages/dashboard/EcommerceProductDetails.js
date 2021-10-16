@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { Icon } from '@iconify/react';
 import { sentenceCase } from 'change-case';
 import { useParams } from 'react-router-dom';
@@ -26,6 +27,8 @@ import {
   ProductDetailsCarousel
 } from '../../components/_dashboard/e-commerce/product-details';
 import CartWidget from '../../components/_dashboard/e-commerce/CartWidget';
+import { listProductDetails } from 'src/redux/actions/productActions';
+import ExampleReact from '../ExampleReact';
 
 // ----------------------------------------------------------------------
 
@@ -80,13 +83,15 @@ const SkeletonLoad = (
 export default function EcommerceProductDetails() {
   const { themeStretch } = useSettings();
   const dispatch = useDispatch();
-  const { name } = useParams();
+  const { id } = useParams();
   const [value, setValue] = useState('1');
-  const { product, error } = useSelector((state) => state.product);
 
+  const productDetails = useSelector((state) => state.productDetails)
+  const { loading, error, product } = productDetails;
+  
   useEffect(() => {
-    dispatch(getProduct(name));
-  }, [dispatch, name]);
+    dispatch(listProductDetails(id))
+  }, [dispatch, id])
 
   const handleChangeTab = (event, newValue) => {
     setValue(newValue);
@@ -98,14 +103,15 @@ export default function EcommerceProductDetails() {
         <HeaderBreadcrumbs
           heading="Product Details"
           links={[
-            { name: 'Dashboard', href: PATH_DASHBOARD.root },
+            { name: 'Products', href: '/products' },
             {
-              name: 'E-Commerce',
-              href: PATH_DASHBOARD.eCommerce.root
+              name: 'productDetails',
+              href: `/productDetails/:${id}`
             },
-            { name: sentenceCase(name) }
           ]}
         />
+
+        <ExampleReact />
 
         <CartWidget />
 
@@ -167,7 +173,7 @@ export default function EcommerceProductDetails() {
           </>
         )}
 
-        {!product && SkeletonLoad}
+        {!product && loading && SkeletonLoad}
 
         {error && <Typography variant="h6">404 Product not found</Typography>}
       </Container>
