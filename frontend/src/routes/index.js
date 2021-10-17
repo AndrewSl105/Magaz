@@ -151,6 +151,7 @@ export default function Router() {
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
         { path: 'products/page/:pageNumber', element: <ProductsScreen /> },
+        { path: 'products/category/:value/page/:pageNumber', element: <ProductsScreen /> },
         { path: 'categories', element: <CategoriesScreen /> },
         { path: 'productDetails/:id', element: <EcommerceProductDetails /> },
         { path: 'maintenance', element: <Maintenance /> },

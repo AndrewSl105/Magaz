@@ -8,9 +8,8 @@ import axios from 'axios'
 const getProducts = asyncHandler(async (req, res) => {
 
 const { keyword, hashtags, brand, category, gender } = req.query;
-const pageSize = 5;
+const pageSize = 8;
 const page = Number(req.query.pageNumber) || 1;
-const count = await Product.countDocuments();
 
 if (keyword) {
   const keyword = req.query.keyword
@@ -31,7 +30,6 @@ if (keyword) {
 }
 
 if (category && gender && brand) {
-  console.log(true);
   const categoryArr = category.split(",");
   const count = await Product.countDocuments( {$and:[
     {"category":{ $in: categoryArr }},
@@ -134,7 +132,8 @@ if (req === 'all') {
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
 }
 
-const products = await Product.find() 
+const count = await Product.countDocuments({});
+const products = await Product.find({}).limit(pageSize).skip(pageSize * (page - 1));
 res.json({ products, page, pages: Math.ceil(count / pageSize) });
 
 })
