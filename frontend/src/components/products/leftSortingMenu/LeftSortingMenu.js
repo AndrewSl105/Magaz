@@ -1,7 +1,6 @@
 import React from 'react';
 import { styled } from '@material-ui/core/styles';
-import { Box,  List, ListItem, Checkbox, FormControlLabel, RadioGroup  } from '@material-ui/core';
-import CategoryBox from '../categoryBox/CategoryBox';
+import { Box, Button, Checkbox, FormControlLabel, RadioGroup  } from '@material-ui/core';
 import { Form, FormikProvider, useFormik } from 'formik';
 import { LoadingButton } from '@material-ui/lab';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,7 +8,9 @@ import { useState, useEffect } from 'react';
 import { listCategories, listHashtags } from 'src/redux/actions/productActions';
 import { Block } from 'src/pages/components-overview/Block';
 import { useNavigate } from 'react-router';
-
+import { listProducts } from '../../../redux/actions/productActions'
+import { isObjectPropEquals } from '../../../utils/checkState'
+import { getCategories, getHashtags } from 'src/utils/selectorUtils';
 
 const RootStyle = styled('div')(({ theme }) => ({
     [theme.breakpoints.up('lg')]: {
@@ -27,73 +28,78 @@ const style = {
     flexFlow: 'column',
     width: '100%',
     flexWrap: 'wrap',
-    '& > *': { m: '8px !important' }
+    padding: '1rem',
+    '& > *': { m: '5px !important' }
 };
 
 const LeftSortingMenu = props => {
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const { setCategory, pageNumber } = props;
+    const { setHashTags, setCategory, category } = props;
+    
+    const {
+        categoriesList
+      } = useSelector(state => ({
+        categoriesList: getCategories(state),
+    }), isObjectPropEquals);
 
+    const {
+        hashtagsList
+      } = useSelector(state => ({
+        hashtagsList: getHashtags(state),
+    }), isObjectPropEquals);
 
-    const [categoryArr, setCAtegoryArr] = useState([]);
-
-    const categoriesList = useSelector((state) => state.categories);
-    const hashtagsList = useSelector((state) => state.hashtags);
     const { categories } = categoriesList;
     const { hashtags } = hashtagsList;
 
+    const dispatch = useDispatch();
     const formValues = {
         category: [],
+        hashtags: []
     };
 
     useEffect(() => {
         dispatch(listCategories())
         dispatch(listHashtags())
-    }, [dispatch])
-
+    }, [dispatch]);
 
     const formik = useFormik({
         enableReinitialize: true,
         initialValues: {
-            category: formValues.category || categories,
+            category: formValues.category,
+            hashtags: formValues.hashtags
+
         },
         onSubmit: async (values, { setSubmitting, setErrors }) => {
-            console.log(values.category)
-            setCategory(values.category)
-
+            if (!category.includes(values.category)) {
+                setCategory([...category, values.category]);
+            }
           try {
             setSubmitting(false);
           } catch (error) {
-            console.error(error);
             setSubmitting(false);
             setErrors(error);
           }
         } 
-      });
+    });
     
-    const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
-    console.log(values)
+    const { handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
     const onChangeHandler = (e) => {
-        const newCat = [
-            ...categoryArr, e.target.value
-        ];
         setFieldValue('category', e.target.value);
-    }
+    };
+
+    const clearFilters = () => {
+        setCategory([]);
+    };
 
     return (
         <RootStyle>
-            <Box 
-                sx={{
-                    marginTop: '2rem'
-                }}
-            >
+            <Box >
                 <FormikProvider value={formik}>
                     <Form noValidate autoComplete="off" onSubmit={handleSubmit}>
-                        <Block title="Категории" sx={style}>
-                            <RadioGroup  {...getFieldProps('category')}>
-                                {categories.map(item => {
+                        <Box >
+                            <Block title="Категории" sx={style}>
+                                <RadioGroup  {...getFieldProps('category')}>
+                                    {categories.map(item => {
                                         return <FormControlLabel
                                             onChange={onChangeHandler}
                                             key={item}
@@ -101,13 +107,35 @@ const LeftSortingMenu = props => {
                                             control={<Checkbox />}
                                             label={item} />
                                     })}
-                            </RadioGroup>
-                        </Block>
+                                </RadioGroup>
+                            </Block>
+                        </Box>
+                        <Box sx={{
+                                marginTop: '1rem'
+                            }}>
+                            <Block title="Хештеги" sx={style}>
+                                <RadioGroup  {...getFieldProps('category')}>
+                                    {hashtags.map(item => {
+                                        return <FormControlLabel
+                                            onChange={onChangeHandler}
+                                            key={item}
+                                            value={item}
+                                            control={<Checkbox />}
+                                            label={item} />
+                                    })}
+                                </RadioGroup>
+                            </Block>
+                        </Box>
                         <LoadingButton sx={{
                             marginTop: '1rem'
                         }} type="submit" fullWidth variant="contained" size="medium" loading={isSubmitting}>
                             Застосувати фильтри
                         </LoadingButton>
+                        <Button sx={{
+                            marginTop: '1rem'
+                        }} fullWidth variant="contained" color='secondary' size="medium" onClick={clearFilters}>
+                            Очистити фільтри
+                        </Button>
                     </Form>
                 </FormikProvider >
             </Box>

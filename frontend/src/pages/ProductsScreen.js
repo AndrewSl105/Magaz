@@ -1,54 +1,24 @@
+import React, { useEffect, useState } from 'react';
 import Page from '../components/Page';
-import { useState } from 'react';
 import { styled } from '@material-ui/core/styles';
-import { Box, Container, Pagination } from '@material-ui/core';
-import { ShopProductList } from 'src/components/_dashboard/e-commerce/shop';
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
-import { listProducts } from '../redux/actions/productActions'
-import { useNavigate } from 'react-router';
-import {
-    useLocation
-} from "react-router-dom";
+import { Container} from '@material-ui/core';
 import LeftSortingMenu from 'src/components/products/leftSortingMenu/LeftSortingMenu';
-
+import Products from 'src/components/products/Products';
 
 const ProductsScreen = () => {
-    const dispatch = useDispatch();
-    const [pageNumber, setPage] = useState(1);
-    const navigate = useNavigate();
-    const { pathname } = useLocation();
-    const [category, setCategory] = useState('');
+
+    const [ category, setCategory ] = useState([]);
+    const [ hashTags, setHashtags ] = useState('');
+    const [ keyWord, setKeyWord ] = useState('');
 
     const RootStyle = styled(Page)(({ theme }) => ({
         display: 'flex',
         minHeight: '100%',
         alignItems: 'center',
         paddingTop: theme.spacing(3),
-        paddingBottom: theme.spacing(1)
+        paddingBottom: theme.spacing(1),
+        background: '#f4f4f4'
     }));
-
-    const keyword = ''
-
-    console.log(category)
-
-  useEffect(() => {
-    dispatch(listProducts(keyword, category, pageNumber))
-  }, [dispatch, keyword, category, pageNumber])
-
-  useEffect(() => {
-    if (!pathname.includes(`/page/${pageNumber}`)) {
-        setPage(pathname.split('/page/').pop())
-    }
-  }, [pageNumber, category])
-
-    const productList = useSelector((state) => state.productList)
-    const { loading, error, products, page, pages } = productList;
-
-    const handleChange = (event, value) => {
-        setPage(value);
-        navigate(`/products/page/${value}`)
-    };
 
     return (
         <RootStyle title="Products">
@@ -57,38 +27,22 @@ const ProductsScreen = () => {
                     display: 'grid',
                     gridTemplateColumns: '2fr 10fr',
                     padding: '1rem !important',
-                    maxWidth: '1800px !important',
-                    margin: '1rem !important'
+                    maxWidth: '1440px !important',
+                    margin: '0 auto'
                 }}
             >
-                <LeftSortingMenu setCategory={setCategory} pageNumber={pageNumber} />
+                <LeftSortingMenu hashTags={hashTags} category={category} setHashtags={setHashtags} setCategory={setCategory} />
                 <Container
-                        sx={{
-                            width: '100%',
-                            maxWidth: '100% !important'
-                        }}
-                    >
-                    <ShopProductList products={products} isLoad={loading} />
-                    <Box sx={{ my: 2, mx: 'auto', maxWidth: 280, textAlign: 'center' }}>
-                        <Pagination 
-                            defaultPage={1} 
-                            page={page} 
-                            count={pages || 2} 
-                            variant="outlined" 
-                            onChange={handleChange}
-                            shape="rounded" 
-                            size="large" 
-                            sx={{
-                                justifyContent: "center",
-                                display: 'flex',
-                                marginTop: '2rem'
-                            }}
-                        />
-                    </Box>
+                    sx={{
+                        width: '100%',
+                        maxWidth: '100% !important'
+                    }}
+                >
+                    <Products category={category} hashTags={hashTags} keyword={keyWord} />
                 </Container>
             </Container>
         </RootStyle>
     )
 }
 
-export default ProductsScreen
+export default ProductsScreen;
