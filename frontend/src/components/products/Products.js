@@ -13,6 +13,8 @@ const Products = props => {
 
     const categoryList = category.toString();
 
+    console.log(categoryList, category);
+
     const productList = useSelector((state) => state.productList)
     const { loading, products, pages, page } = productList;
     const dispatch = useDispatch();

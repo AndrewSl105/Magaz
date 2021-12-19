@@ -8,7 +8,7 @@ import axios from 'axios'
 const getProducts = asyncHandler(async (req, res) => {
 
 const { keyword, hashtags, brand, category, gender } = req.query;
-const pageSize = 8;
+const pageSize = 24;
 const page = Number(req.query.pageNumber) || 1;
 
 if (keyword) {
@@ -43,92 +43,6 @@ if (category && gender && brand) {
     {"brand":{ $in: brand }},
   ]}).limit(pageSize).skip(pageSize * (page - 1));
 
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (category && gender && !brand) {
-  const categoryArr = category.split(",")
-
-  const count = await Product.countDocuments( {$and:[
-    {"category":{ "$in": categoryArr }},
-    {"gender":{ "$in": gender }},
-  ]});
-
-  const products = await Product.find( {$and: [
-    {"category":{ "$in": categoryArr }},
-    {"gender":{ "$in": gender }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (category && !gender && !brand) {
-  console.log(category)
-  const categoryArr = category.split(",")
-  const count = await Product.countDocuments( {$and:[
-    {"category":{ "$in": categoryArr }},
-  ]});
-
-  const products = await Product.find( {$and: [
-    {"category":{ "$in": categoryArr }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (!category && gender && brand) {
-  const count = await Product.countDocuments( {$and:[
-    {"gender":{ "$in": gender }},
-    {"brand":{ $in: brand }},
-  ]});
-
-  const products = await Product.find( {$and: [
-    {"gender":{ "$in": gender }},
-    {"brand":{ $in: brand }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (!category && gender && !brand) {
-  const count = await Product.countDocuments( {$and:[
-    {"gender":{ "$in": gender }},
-  ]});
-
-  const products = await Product.find( {$and: [
-    {"gender":{ "$in": gender }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (!category && !gender && brand) {
-  const count = await Product.countDocuments( {$and:[
-    {"brand":{ $in: brand }},
-  ]});
-
-  const products = await Product.find( {$and: [
-    {"brand":{ $in: brand }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-if (hashtags) {
-  const hashtagArr = hashtags.split(",")
-  console.log(category)
-  const count = await Product.countDocuments( {$or:[
-    {"hashtags":{ "$in": hashtagArr }},
-  ]});
-  const products = await Product.find( {$or:[
-    {"hashtags":{ "$in": hashtagArr }},
-  ]}).limit(pageSize).skip(pageSize * (page - 1));
-  res.json({ products, page, pages: Math.ceil(count / pageSize) });
-}
-
-if (req === 'all') {
-  console.log(true)
-  const count = await Product.countDocuments({});
-  const products = await Product.find({}).limit(pageSize).skip(pageSize * (page - 1));
   res.json({ products, page, pages: Math.ceil(count / pageSize) });
 }
 

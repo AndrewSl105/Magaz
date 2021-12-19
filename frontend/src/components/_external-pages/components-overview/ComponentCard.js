@@ -12,12 +12,14 @@ ComponentCard.propTypes = {
 };
 
 export default function ComponentCard({ item }) {
-  const { name, icon, href } = item;
+  const { mainCategory, icon, href } = item;
 
   return (
-    <Grid item xs={12} sm={6} md={3}>
+    <Grid item sx={{
+      margin: '0.5rem'
+  }} xs={12} sm={6} md={3}>
       <MotionInView variants={varFadeInUp}>
-        <Link component={RouterLink} to={href} underline="none">
+        <Link component={RouterLink} to={href || ''} underline="none">
           <Paper
             sx={{
               p: 1,
@@ -35,8 +37,8 @@ export default function ComponentCard({ item }) {
             >
               <Box
                 component="img"
-                src={icon}
-                alt={name}
+                src={icon || ''}
+                alt={mainCategory}
                 sx={{
                   mx: 'auto',
                   transition: (theme) => theme.transitions.create('all')
@@ -45,7 +47,7 @@ export default function ComponentCard({ item }) {
             </CardActionArea>
 
             <Typography variant="subtitle2" sx={{ mt: 1, p: 1 }}>
-              {name}
+              {mainCategory || item}
             </Typography>
           </Paper>
         </Link>

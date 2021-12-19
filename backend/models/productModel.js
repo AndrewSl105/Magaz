@@ -18,8 +18,8 @@ const reviewSchema = mongoose.Schema(
 
 const sizeSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
-    countInStock: {
+    size: { type: String },
+    amount: {
       type: Number,
     }
   },
@@ -57,6 +57,7 @@ const productSchema = mongoose.Schema(
     category: [ {
       type: String,
     }],
+    mainCategory: {type: String,},
     hashtags: [  {
       type: String,
     },],

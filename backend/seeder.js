@@ -9,6 +9,7 @@ import Product from './models/productModel.js'
 import Order from './models/orderModel.js'
 import connectDB from './config/db.js'
 import boards from './data/boards.js'
+import axios from 'axios';
 
 dotenv.config()
 
@@ -17,12 +18,61 @@ connectDB()
 const importData = async () => {
   try {
     await Order.deleteMany()
-    await Product.deleteMany()
+    // await Product.deleteMany()
     await User.deleteMany()
     await Board.deleteMany()
+    await Product.deleteMany()
     const createdUsers = await User.insertMany(users)
-    const adminUser = createdUsers[0]._id
-    const sampleProducts = products.map((product) => {
+    const adminUser = createdUsers[0]._id;
+    
+    const newArray = [];
+
+
+    const getProductsArray = async (url) => {
+      return await axios.get(url)
+      .then(response => {
+        return response.data
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    };
+    
+    const createMainCategory = (el) => {
+      if (el.includes()) {
+        
+      }
+    }
+    
+    const newlist = await getProductsArray('https://msdrop.com.ua/export/RWwn/json');
+    
+    newlist.map(item => {
+
+      return newArray.push(
+        {
+          name: item.name,
+          sku: item.sku,
+          price: item.price,
+          category: [item.category],
+          mainCategory: '',
+          description: item.description,
+          gallery: item.gallery,
+          country: item.country || '',
+          gender: item.gender || '',
+          from: 'https://msdrop.com.ua/',
+          brand: item.brand || '',
+          hashtags: [],
+          reviews: [],
+          sizes: item.sizes || [],
+          rating: 0,
+          numReviews: 0,
+          price: item.price,
+          visibility: false,
+        }
+      )
+    })
+
+    const sampleProducts = newArray.map((product) => {
       return { ...product, user: adminUser }
     })
 

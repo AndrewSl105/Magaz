@@ -1,10 +1,12 @@
 import React from 'react';
 import { styled } from '@material-ui/core/styles';
 import Page from '../components/Page';
-import { Container } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { listCategories } from 'src/redux/actions/productActions';
 import { useEffect } from 'react';
+import ComponentCard from '../components/_external-pages/components-overview/ComponentCard';
+import { categories } from '../components/products/leftSortingMenu/data';
 
 
 const RootStyle = styled(Page)(({ theme }) => ({
@@ -17,9 +19,10 @@ const RootStyle = styled(Page)(({ theme }) => ({
 
 const CategoriesScreen = () => {
     const dispatch = useDispatch();
-    const categoriesList = useSelector((state) => state.categories);
+    // const categoriesList = useSelector((state) => state.categories);
 
-    const { categories, loading } = categoriesList;
+    // const { categories, loading } = categoriesList;
+    console.log(categories);
 
     useEffect(() => {
         dispatch(listCategories())
@@ -29,9 +32,17 @@ const CategoriesScreen = () => {
     return (
         <RootStyle title="Products">
             <Container>
-                {
-                    categories.map(item => item)
-                }
+                <Grid sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    flexWrap: 'wrap'
+                }}>
+                    {
+                        categories.map(item => {
+                            return <ComponentCard key={item.mainCategory} item={item} />
+                        })
+                    }
+                </Grid>
             </Container>
         </RootStyle>
     )
