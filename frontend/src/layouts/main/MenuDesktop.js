@@ -1,13 +1,13 @@
 import PropTypes from 'prop-types';
 import { Icon } from '@iconify/react';
-import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { NavLink as RouterLink, useLocation } from 'react-router-dom';
-import arrowIosUpwardFill from '@iconify/icons-eva/arrow-ios-upward-fill';
-import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 // material
 import { styled } from '@material-ui/core/styles';
-import { Box, Link, Grid, List, Stack, Popover, ListItem, ListSubheader, CardActionArea } from '@material-ui/core';
+import { Box, Link, Grid, List, Stack, Popover, ListItem, ListSubheader, ListItemIcon } from '@material-ui/core';
+import arrowIosUpwardFill from '@iconify/icons-eva/arrow-ios-upward-fill';
+import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -21,7 +21,9 @@ const LinkStyle = styled(Link)(({ theme }) => ({
   '&:hover': {
     opacity: 0.48,
     textDecoration: 'none'
-  }
+  },
+  display: 'flex',
+  alignItems: 'center'
 }));
 
 // ----------------------------------------------------------------------
@@ -41,7 +43,7 @@ function IconBullet({ type = 'item' }) {
           height: 4,
           borderRadius: '50%',
           bgcolor: 'currentColor',
-          ...(type !== 'item' && { ml: 0, width: 8, height: 2, borderRadius: 2 })
+          ...(type !== 'item' && { ml: 0, width: 8, height: 2, borderRadius: 2 }),
         }}
       />
     </Box>
@@ -59,8 +61,12 @@ MenuDesktopItem.propTypes = {
 };
 
 function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onClose }) {
-  const { title, path, children } = item;
+  const { title, path, children, icon } = item;
   const isActive = pathname === path;
+
+  const userLogin = useSelector((state) => state.userLogin);
+  console.log(userLogin);
+
 
   if (children) {
     return (
@@ -76,6 +82,7 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
             ...(isOpen && { opacity: 0.48 })
           }}
         >
+          <ListItemIcon>{icon}</ListItemIcon>
           {title}
           <Box
             component={Icon}
@@ -109,7 +116,7 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
               const { subheader, items } = list;
 
               return (
-                <Grid key={subheader} item xs={12} md={subheader === 'Dashboard' ? 6 : 2}>
+                <Grid key={subheader} item xs={12} md={2}>
                   <List disablePadding>
                     <ListSubheader
                       disableSticky
@@ -133,8 +140,9 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
                         underline="none"
                         sx={{
                           p: 0,
-                          mt: 3,
+                          mt: 2,
                           typography: 'body2',
+                          fontSize: '12px',
                           color: 'text.secondary',
                           transition: (theme) => theme.transitions.create('color'),
                           '&:hover': { color: 'text.primary' },
@@ -144,33 +152,7 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
                           })
                         }}
                       >
-                        {item.title === 'Dashboard' ? (
-                          <CardActionArea
-                            sx={{
-                              py: 5,
-                              px: 10,
-                              borderRadius: 2,
-                              color: 'primary.main',
-                              bgcolor: 'background.neutral'
-                            }}
-                          >
-                            <Box
-                              component={motion.img}
-                              whileTap="tap"
-                              whileHover="hover"
-                              variants={{
-                                hover: { scale: 1.02 },
-                                tap: { scale: 0.98 }
-                              }}
-                              src="/static/illustrations/illustration_dashboard.png"
-                            />
-                          </CardActionArea>
-                        ) : (
-                          <>
-                            <IconBullet />
-                            {item.title}
-                          </>
-                        )}
+                        {item.title}
                       </ListItem>
                     ))}
                   </List>
@@ -183,22 +165,6 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
     );
   }
 
-  if (title === 'Documentation') {
-    return (
-      <LinkStyle
-        href={path}
-        target="_blank"
-        sx={{
-          ...(isHome && { color: 'common.white' }),
-          ...(isOffset && { color: 'text.primary' }),
-          ...(isActive && { color: 'primary.main' })
-        }}
-      >
-        {title}
-      </LinkStyle>
-    );
-  }
-
   return (
     <LinkStyle
       to={path}
@@ -206,9 +172,10 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
       sx={{
         ...(isHome && { color: 'common.white' }),
         ...(isOffset && { color: 'text.primary' }),
-        ...(isActive && { color: 'primary.main' })
+        ...(isActive && { color: 'primary.main' }),
       }}
     >
+      <ListItemIcon>{icon}</ListItemIcon>
       {title}
     </LinkStyle>
   );

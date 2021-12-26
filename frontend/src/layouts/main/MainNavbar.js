@@ -50,7 +50,7 @@ export default function MainNavbar() {
   const isHome = pathname === '/';
 
   return (
-    <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
+    <AppBar sx={{ boxShadow: 0, bgcolor: '#373737' }}>
       <ToolbarStyle
         disableGutters
         sx={{
@@ -71,9 +71,6 @@ export default function MainNavbar() {
           <RouterLink to="/">
             <Logo />
           </RouterLink>
-          <Label color="info" sx={{ ml: 1 }}>
-            v2.5.0
-          </Label>
           <Box sx={{ flexGrow: 1 }} />
 
           <MHidden width="mdDown">

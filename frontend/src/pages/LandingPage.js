@@ -9,7 +9,7 @@ import Space from 'src/components/Space';
 
 const RootStyle = styled(Page)({
   height: '100%',
-  paddingTop: '5rem',
+  paddingTop: '7rem',
   maxWidth: '1080px',
   margin: '0 auto'
 });
@@ -25,14 +25,14 @@ export default function LandingPage() {
             <CarouselAnimation />
           </CardContent>
       </Card>
-      <Space value='3' />
+      <Space value='2' />
       <Card>
           <CardHeader title="Carousel Center Mode" />
           <CardContent>
               <CarouselCenterMode />
           </CardContent>
       </Card>
-      <Space value='3' />
+      <Space value='2' />
       <Card>
           <CardHeader title="Carousel Animation" />
           <CardContent>

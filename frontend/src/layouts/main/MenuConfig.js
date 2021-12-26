@@ -1,73 +1,111 @@
-import { Icon } from '@iconify/react';
-import homeFill from '@iconify/icons-eva/home-fill';
-import fileFill from '@iconify/icons-eva/file-fill';
-import roundGrain from '@iconify/icons-ic/round-grain';
-import bookOpenFill from '@iconify/icons-eva/book-open-fill';
+import BookIcon from '@material-ui/icons/Book';
+import CategoryIcon from '@material-ui/icons/Category';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+
 // routes
-import { PATH_AUTH, PATH_DOCS, PATH_PAGE, PATH_DASHBOARD } from '../../routes/paths';
+import { PATH_AUTH, PATH_DOCS, PATH_PAGE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
-const ICON_SIZE = {
-  width: 22,
-  height: 22
-};
-
 const menuConfig = [
   {
-    title: 'Home',
-    icon: <Icon icon={homeFill} {...ICON_SIZE} />,
-    path: '/'
-  },
-  {
-    title: 'Components',
-    icon: <Icon icon={roundGrain} {...ICON_SIZE} />,
-    path: PATH_PAGE.components
-  },
-  {
-    title: 'Pages',
-    path: '/pages',
-    icon: <Icon icon={fileFill} {...ICON_SIZE} />,
+    title: 'Catalog',
+    path: '/categories',
+    icon: <CategoryIcon />,
     children: [
       {
-        subheader: 'Other',
+        subheader: 'Верхняя легкая одежда',
         items: [
-          { title: 'About us', path: PATH_PAGE.about },
-          { title: 'Contact us', path: PATH_PAGE.contact },
-          { title: 'FAQs', path: PATH_PAGE.faqs },
-          { title: 'Pricing', path: PATH_PAGE.pricing },
-          { title: 'Payment', path: PATH_PAGE.payment },
-          { title: 'Maintenance', path: PATH_PAGE.maintenance },
-          { title: 'Coming Soon', path: PATH_PAGE.comingSoon },
-          { title: 'Products', path: PATH_PAGE.products }
+          { title: "Сарафаны", path: '/' },
+          { title: "Платья", path: '' },
+          { title: "Туники", path: '' },
+          { title: "Кардиганы", path: '' },
+          { title: "Комбинезоны", path: '' },
+          { title: "Кофты", path: '' },
+          { title: "Свитшоты", path: '' },
+          { title: "Толстовки", path: '' },
+          { title: "Худи", path: '' },
+          { title: "Шорты", path: '' },
+          { title: "Брюки", path: '' },
+          { title: "Джинсы", path: '' },
+          { title: "Майки", path: '' },
+          { title: "Майки, топы", path: '' },
+          { title: "Рубашки", path: '' },
+          { title: "Блузы", path: '' },
         ]
       },
       {
-        subheader: 'Authentication',
+        subheader: 'Верхняя Одежда',
         items: [
-          { title: 'Login', path: PATH_AUTH.loginUnprotected },
-          { title: 'Register', path: PATH_AUTH.registerUnprotected },
-          { title: 'Reset password', path: PATH_AUTH.resetPassword },
-          { title: 'Verify code', path: PATH_AUTH.verify }
+          { title: "Зимние куртки", path: '/' },
+          { title: "Демисезонные куртки", path: '' },
+          { title: "Анораки", path: '' },
+          { title: "Пуховики", path: '' },
+          { title: "Бомберы", path: '' },
+          { title: "Парки", path: '' }
         ]
       },
       {
-        subheader: 'Error',
+        subheader: 'Белье',
         items: [
-          { title: 'Page 404', path: PATH_PAGE.page404 },
-          { title: 'Page 500', path: PATH_PAGE.page500 }
+          { title: "Боди", path: '/' },
+          { title: "Комплекты белья", path: '' },
+          { title: "Корсеты, бюстье", path: '' },
+          { title: "Нижнее белье", path: '' },
+          { title: "Пижамы женские", path: '' },
+          { title: "Бюстгальтеры", path: '' },
+          { title: "Женские трусы", path: '' }
         ]
       },
       {
-        subheader: 'Dashboard',
-        items: [{ title: 'Dashboard', path: PATH_DASHBOARD.root }]
+        subheader: 'Термо Одежда',
+        items: [
+          { title: "Теплые жилеты", path: '/' },
+          { title: "Термокостюмы", path: '' },
+          { title: "Термолонгсливы", path: '' },
+          { title: "Термолосины", path: '' },
+          { title: "Термоноски женские", path: '' },
+          { title: "Термотрусы", path: '' },
+        ]
+      },
+      {
+        subheader: 'Для спорта',
+        items: [
+          { title: "Спортивные брюки", path: '/' },
+          { title: "Спортивные костюмы", path: '' },
+          { title: "Спортивные кофты", path: '' },
+          { title: "Спортивные шорты", path: '' },
+          { title: "Лыжные брюки", path: '' },
+          { title: "Лыжные куртки", path: '' },
+        ]
+      },
+      {
+        subheader: 'Другая одежда',
+        items: [
+          { title: "Домашняя одежда", path: '/' },
+          { title: "Купальники и пляжная одежда", path: '' },
+          { title: "Портупеи", path: '' },
+          { title: "Ночные рубашки", path: '' },
+          { title: "Носки", path: '' },
+        ]
       }
     ]
   },
   {
-    title: 'Documentation',
-    icon: <Icon icon={bookOpenFill} {...ICON_SIZE} />,
-    path: PATH_DOCS
+    title: 'Favourites',
+    icon: <FavoriteIcon />,
+    path: PATH_PAGE.components
+  },
+  {
+    title: 'Blog',
+    icon: <BookIcon />,
+    path: PATH_DOCS,
+  },
+  {
+    title: 'Log In',
+    icon: <AccountCircleIcon />,
+    path: PATH_AUTH.login,
   }
 ];
 
