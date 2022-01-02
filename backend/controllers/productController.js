@@ -29,18 +29,15 @@ if (keyword) {
   res.json({ products, page, pages: Math.ceil(count / pageSize) })
 }
 
-if (category && gender && brand) {
+if (category) {
+  console.log(category, 'in control');
   const categoryArr = category.split(",");
   const count = await Product.countDocuments( {$and:[
     {"category":{ $in: categoryArr }},
-    {"gender":{ $in: gender }},
-    {"brand":{ $in: brand }},
   ]});
 
   const products = await Product.find( {$and:[
     {"category":{ "$in": categoryArr }},
-    {"gender":{ "$in": gender }},
-    {"brand":{ $in: brand }},
   ]}).limit(pageSize).skip(pageSize * (page - 1));
 
   res.json({ products, page, pages: Math.ceil(count / pageSize) });

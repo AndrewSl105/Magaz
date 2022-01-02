@@ -29,7 +29,9 @@ const style = {
     width: '100%',
     flexWrap: 'wrap',
     padding: '1rem',
-    '& > *': { m: '5px !important' }
+    overflow: 'auto',
+    '& > *': { m: '5px !important' },
+    maxHeight: '70vh'
 };
 
 const LeftSortingMenu = props => {

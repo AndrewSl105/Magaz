@@ -33,6 +33,7 @@ import { logout } from './userActions'
 export const listProducts = (keyword = '', value = '', pageNumber = '') => async (
   dispatch
 ) => {
+  console.log(value);
   try {
     dispatch({ type: PRODUCT_LIST_REQUEST })
     const { data } = await axios.get(

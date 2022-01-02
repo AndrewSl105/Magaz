@@ -150,8 +150,7 @@ export default function Router() {
       element: <LogoOnlyLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
-        { path: 'products/page/:pageNumber', element: <ProductsScreen /> },
-        { path: 'products/category/:value/page/:pageNumber', element: <ProductsScreen /> },
+        { path: 'products/category/:value/', element: <ProductsScreen /> },
         { path: 'categories', element: <CategoriesScreen /> },
         { path: 'productDetails/:id', element: <EcommerceProductDetails /> },
         { path: 'maintenance', element: <Maintenance /> },
