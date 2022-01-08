@@ -14,6 +14,7 @@ import {
 } from '@material-ui/core';
 // utils
 import { fDate } from '../../../utils/formatTime';
+import Markdown from 'src/components/Markdown';
 
 // ----------------------------------------------------------------------
 
@@ -53,6 +54,7 @@ export default function BlogPostCommentItem({ name, avatarUrl, message, tagUser,
         <ListItemText
           primary={name}
           primaryTypographyProps={{ variant: 'subtitle1' }}
+          sx={{color: 'black !important'}}
           secondary={
             <>
               <Typography
@@ -65,8 +67,9 @@ export default function BlogPostCommentItem({ name, avatarUrl, message, tagUser,
               >
                 {fDate(postedAt)}
               </Typography>
-              <Typography component="span" variant="body2">
-                <strong>{tagUser}</strong> {message}
+              <Typography component="span">
+                {hasReply ? <strong>{tagUser}</strong> : null}
+                <Markdown children={message} />
               </Typography>
             </>
           }

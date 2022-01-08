@@ -4,7 +4,7 @@ import rehypeRaw from 'rehype-raw';
 import rehypeHighlight from 'rehype-highlight';
 // material
 import { styled } from '@material-ui/core/styles';
-import { Link, Typography, Divider } from '@material-ui/core';
+import { Link, Typography, Divider, Box } from '@material-ui/core';
 
 // ----------------------------------------------------------------------
 
@@ -76,12 +76,13 @@ const MarkdownWrapperStyle = styled('div')(({ theme }) => {
 
 const components = {
   h1: ({ ...props }) => <Typography variant="h1" {...props} />,
-  h2: ({ ...props }) => <Typography variant="h2" {...props} />,
+  h2: ({ ...props }) => <Typography sx={{ marginBottom: '1rem'}} variant="h2" {...props} />,
   h3: ({ ...props }) => <Typography variant="h3" {...props} />,
   h4: ({ ...props }) => <Typography variant="h4" {...props} />,
   h5: ({ ...props }) => <Typography variant="h5" {...props} />,
   h6: ({ ...props }) => <Typography variant="h6" {...props} />,
   hr: ({ ...props }) => <Divider sx={{ my: 3 }} {...props} />,
+  p: ({ ...props }) => <p style={{ lineHeight: 1.8, fontSize: '1.1rem', color: '#212B36 !important'  }} {...props} />,
   a: ({ ...props }) => {
     /* eslint-disable react/prop-types */
     const { href } = props;
@@ -90,7 +91,12 @@ const components = {
     ) : (
       <Link target="_blank" rel="nofollow noreferrer noopener" {...props} />
     );
-  }
+  },
+  img: ({...props}) => <Box sx={{display: 'flex', justifyContent: 'center'}}>
+    <Box sx={{width: '100%', marginTop: '1rem', marginBottom: '1rem'}}>
+      <img {...props} />
+    </Box>
+  </Box>
 };
 
 // ----------------------------------------------------------------------

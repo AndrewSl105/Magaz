@@ -5,8 +5,7 @@ import { useSnackbar } from 'notistack5';
 import { styled } from '@material-ui/core/styles';
 import { Stack, Typography, TextField } from '@material-ui/core';
 import { LoadingButton } from '@material-ui/lab';
-// utils
-import fakeRequest from '../../../utils/fakeRequest';
+import { blogNewComment } from '../../../redux/actions/blogActions';
 
 // ----------------------------------------------------------------------
 
@@ -18,33 +17,29 @@ const RootStyles = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-export default function BlogPostCommentForm() {
+export default function BlogPostCommentForm({ postId, dispatch }) {
   const { enqueueSnackbar } = useSnackbar();
 
   const CommentSchema = Yup.object().shape({
-    comment: Yup.string().required('Comment is required'),
-    name: Yup.string().required('Name is required'),
-    email: Yup.string().email('Email must be a valid email address').required('Email is required')
+    post: Yup.string().required('post Id is required'),
+    author_name: Yup.string().required('Author Name is required'),
+    author_email: Yup.string().email('Email must be a valid email address').required('Email is required'),
+    content: Yup.string()
   });
 
   const formik = useFormik({
     initialValues: {
-      comment: '',
-      name: '',
-      email: ''
+      post: postId,
+      author_name: '',
+      author_email: '',
+      content: ''
     },
     validationSchema: CommentSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-      try {
-        await fakeRequest(500);
+        dispatch(blogNewComment(values));
+        setSubmitting(false);
         resetForm();
-        setSubmitting(false);
         enqueueSnackbar('Post success', { variant: 'success' });
-      } catch (error) {
-        console.error(error);
-        setSubmitting(false);
-        setErrors({ afterSubmit: error.code });
-      }
     }
   });
 
@@ -65,25 +60,25 @@ export default function BlogPostCommentForm() {
               minRows={3}
               maxRows={5}
               label="Comment *"
-              {...getFieldProps('comment')}
-              error={Boolean(touched.comment && errors.comment)}
-              helperText={touched.comment && errors.comment}
+              {...getFieldProps('content')}
+              error={Boolean(touched.content && errors.content)}
+              helperText={touched.content && errors.content}
             />
 
             <TextField
               fullWidth
               label="Name *"
-              {...getFieldProps('name')}
-              error={Boolean(touched.name && errors.name)}
-              helperText={touched.name && errors.name}
+              {...getFieldProps('author_name')}
+              error={Boolean(touched.author_name && errors.author_name)}
+              helperText={touched.author_name && errors.author_name}
             />
 
             <TextField
               fullWidth
               label="Email *"
-              {...getFieldProps('email')}
-              error={Boolean(touched.email && errors.email)}
-              helperText={touched.email && errors.email}
+              {...getFieldProps('author_email')}
+              error={Boolean(touched.author_email && errors.author_email)}
+              helperText={touched.author_email && errors.author_email}
             />
 
             <LoadingButton type="submit" variant="contained" loading={isSubmitting}>

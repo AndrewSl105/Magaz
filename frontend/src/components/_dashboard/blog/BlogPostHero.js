@@ -9,7 +9,6 @@ import instagramFilled from '@iconify/icons-ant-design/instagram-filled';
 import { alpha, useTheme, styled } from '@material-ui/core/styles';
 import { Box, Avatar, SpeedDial, Typography, SpeedDialAction, useMediaQuery } from '@material-ui/core';
 // utils
-import { fDate } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
 
@@ -101,48 +100,54 @@ BlogPostHero.propTypes = {
 };
 
 export default function BlogPostHero({ post, ...other }) {
-  const { cover, title, author, createdAt } = post;
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-
+  const cover = post._embedded && post._embedded['wp:featuredmedia'].map(img => img.source_url);
+  const authorName = post._embedded && post._embedded.author.map(a => a.name);
+  const authorImage = post._embedded && post._embedded.author.map(a => a.avatar_urls[0]);
+  
   return (
-    <RootStyle {...other}>
-      <CoverImgStyle alt="post cover" src={cover} />
-
-      <TitleStyle variant="h2" component="h1">
-        {title}
-      </TitleStyle>
-
-      <FooterStyle>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={author.name} src={author.avatarUrl} sx={{ width: 48, height: 48 }} />
-          <Box sx={{ ml: 2 }}>
-            <Typography variant="subtitle1" sx={{ color: 'common.white' }}>
-              {author.name}
-            </Typography>
-            <Typography variant="body2" sx={{ color: 'grey.500' }}>
-              {fDate(createdAt)}
-            </Typography>
+    <Box>
+      {
+        !post ? <h1>No posts</h1> :
+        <RootStyle>
+        <CoverImgStyle alt="post cover" src={cover}  />
+  
+        <TitleStyle variant="h2" component="h1">
+          {post.title && post.title.rendered}
+        </TitleStyle>
+  
+        <FooterStyle>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          <Avatar alt={authorName} src={authorImage} sx={{ width: 48, height: 48 }} />
+            <Box sx={{ ml: 2 }}>
+              <Typography variant="subtitle1" sx={{ color: 'common.white' }}>
+                {authorName}
+              </Typography>
+              <Typography variant="body2" sx={{ color: 'grey.500' }}>
+              </Typography>
+            </Box>
           </Box>
-        </Box>
-
-        <SpeedDial
-          direction={isMobile ? 'up' : 'left'}
-          ariaLabel="Share post"
-          icon={<Icon icon={shareFill} />}
-          sx={{ '& .MuiSpeedDial-fab': { width: 48, height: 48 } }}
-        >
-          {SOCIALS.map((action) => (
-            <SpeedDialAction
-              key={action.name}
-              icon={action.icon}
-              tooltipTitle={action.name}
-              tooltipPlacement="top"
-              FabProps={{ color: 'default' }}
-            />
-          ))}
-        </SpeedDial>
-      </FooterStyle>
-    </RootStyle>
+  
+          <SpeedDial
+            direction={isMobile ? 'up' : 'left'}
+            ariaLabel="Share post"
+            icon={<Icon icon={shareFill} />}
+            sx={{ '& .MuiSpeedDial-fab': { width: 48, height: 48 } }}
+          >
+            {SOCIALS.map((action) => (
+              <SpeedDialAction
+                key={action.name}
+                icon={action.icon}
+                tooltipTitle={action.name}
+                tooltipPlacement="top"
+                FabProps={{ color: 'default' }}
+              />
+            ))}
+          </SpeedDial>
+        </FooterStyle>
+      </RootStyle>
+      }
+    </Box>
   );
 }

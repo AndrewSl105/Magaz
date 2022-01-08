@@ -4,7 +4,7 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 // routes
-import { PATH_AUTH, PATH_DOCS, PATH_PAGE } from '../../routes/paths';
+import { PATH_AUTH, PATH_PAGE } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -100,7 +100,7 @@ const menuConfig = [
   {
     title: 'Blog',
     icon: <BookIcon />,
-    path: PATH_DOCS,
+    path: PATH_PAGE.blog.posts,
   },
   {
     title: 'Log In',

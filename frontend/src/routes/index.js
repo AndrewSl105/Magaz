@@ -12,6 +12,8 @@ import AuthGuard from '../guards/AuthGuard';
 import LoadingScreen from '../components/LoadingScreen';
 import ProductsScreen from 'src/pages/ProductsScreen';
 import CategoriesScreen from 'src/pages/CategoriesScreen';
+import BlogScreen from 'src/pages/BlogScreen';
+import BlogPostScreen from 'src/pages/BlogPostScreen';
 
 // ----------------------------------------------------------------------
 
@@ -156,6 +158,15 @@ export default function Router() {
         { path: 'maintenance', element: <Maintenance /> },
         { path: 'pricing', element: <Pricing /> },
         { path: 'payment', element: <Payment /> },
+        { path: 'blog', element: <BlogScreen /> },
+        {
+          path: 'blog',
+          children: [
+            { path: '/', element: <Navigate to="/blog/posts" replace /> },
+            { path: 'posts', element: <BlogScreen /> },
+            { path: 'post/:id', element: <BlogPostScreen /> },
+          ]
+        },
         { path: '500', element: <Page500 /> },
         { path: '404', element: <NotFound /> },
         { path: '*', element: <Navigate to="/404" replace /> }

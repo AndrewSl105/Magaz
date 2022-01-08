@@ -6,6 +6,7 @@ function path(root, sublink) {
 
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
+const ROOTS_BLOG = '/blog'
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,11 @@ export const PATH_PAGE = {
   faqs: '/faqs',
   page404: '/404',
   page500: '/500',
-  components: '/components'
+  components: '/components',
+  blog: {
+    posts: path(ROOTS_BLOG, '/posts'),
+    post: path(ROOTS_BLOG, '/post/'),
+  }
 };
 
 export const PATH_DASHBOARD = {
