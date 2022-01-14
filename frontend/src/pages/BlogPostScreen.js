@@ -39,14 +39,13 @@ export default function BlogPostScreen() {
 
   const { post, loading } = useSelector((state) => state.blogPost);
 
-  
   useEffect(() => {
     dispatch(blogPost(id))
   },[dispatch, id]);
 
   return (
     <Page sx={{
-        marginTop: '5rem',
+        marginTop: '15vh',
         marginBottom: '5rem',
     }} title="Blog: Post Details | Minimal-UI">
       <Container sx={{maxWidth: '1024px !important'}} >
@@ -64,10 +63,10 @@ export default function BlogPostScreen() {
 
             <Box sx={{ p: { xs: 3, md: 5 } }}>
               <Typography variant="h6" sx={{ mb: 5 }}>
-                  {post.title && post.title.rendered}
+                  {post.title}
               </Typography>
 
-              <Markdown children={post.content && post.content.rendered} />
+              <Markdown children={post.content} />
 
               <Box sx={{ my: 5 }}>
                 <Divider />
@@ -77,8 +76,6 @@ export default function BlogPostScreen() {
               <Box sx={{ display: 'flex', mb: 2 }}>
                 <Typography variant="h4">Comments</Typography>
               </Box>
-
-              <BlogPostCommentList dispatch={dispatch} id={id} />
 
               <Box sx={{ mb: 5, mt: 3, display: 'flex', justifyContent: 'flex-end' }}>
                 <Pagination count={1} color="primary" />

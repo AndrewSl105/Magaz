@@ -102,16 +102,13 @@ BlogPostHero.propTypes = {
 export default function BlogPostHero({ post, ...other }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const cover = post._embedded && post._embedded['wp:featuredmedia'].map(img => img.source_url);
-  const authorName = post._embedded && post._embedded.author.map(a => a.name);
-  const authorImage = post._embedded && post._embedded.author.map(a => a.avatar_urls[0]);
   
   return (
     <Box>
       {
         !post ? <h1>No posts</h1> :
         <RootStyle>
-        <CoverImgStyle alt="post cover" src={cover}  />
+        <CoverImgStyle alt="post cover" src={post.coverImage}  />
   
         <TitleStyle variant="h2" component="h1">
           {post.title && post.title.rendered}
@@ -119,10 +116,10 @@ export default function BlogPostHero({ post, ...other }) {
   
         <FooterStyle>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <Avatar alt={authorName} src={authorImage} sx={{ width: 48, height: 48 }} />
+          <Avatar sx={{ width: 48, height: 48 }} />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle1" sx={{ color: 'common.white' }}>
-                {authorName}
+                {post.author}
               </Typography>
               <Typography variant="body2" sx={{ color: 'grey.500' }}>
               </Typography>

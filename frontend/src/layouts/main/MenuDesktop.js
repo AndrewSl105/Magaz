@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux';
 
 const LinkStyle = styled(Link)(({ theme }) => ({
   ...theme.typography.subtitle2,
-  color: theme.palette.text.primary,
+  color: 'white',
   marginRight: theme.spacing(5),
   transition: theme.transitions.create('opacity', {
     duration: theme.transitions.duration.shortest
@@ -65,9 +65,7 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
   const isActive = pathname === path;
 
   const userLogin = useSelector((state) => state.userLogin);
-  console.log(userLogin);
-
-
+console.log(isOffset);
   if (children) {
     return (
       <div key={title}>
@@ -77,9 +75,7 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
             display: 'flex',
             cursor: 'pointer',
             alignItems: 'center',
-            ...(isHome && { color: 'common.white' }),
             ...(isOffset && { color: 'text.primary' }),
-            ...(isOpen && { opacity: 0.48 })
           }}
         >
           <ListItemIcon>{icon}</ListItemIcon>

@@ -4,7 +4,7 @@ import BlogList from 'src/components/blog/BlogList';
 
 const BlogScreen = () => {
     return (
-        <Box sx={{ marginTop: '5rem', marginBottom: '5rem' }}>
+        <Box sx={{ marginTop: '15vh', marginBottom: '5rem' }}>
             <BlogList />
         </Box>
     )

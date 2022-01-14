@@ -8,7 +8,15 @@ import {
     BLOG_COMMENTS_LIST_REQUEST,
     BLOG_COMMENTS_LIST_SUCCESS,
     BLOG_COMMENTS_LIST_FAIL,
-  
+    BLOG_AUTHOR_DATA_REQUEST,
+    BLOG_AUTHOR_DATA_SUCCESS,
+    BLOG_AUTHOR_DATA_FAIL,
+    BLOG_COVER_IMAGE_REQUEST,
+    BLOG_COVER_IMAGE_SUCCESS,
+    BLOG_COVER_IMAGE_FAIL,
+    NEW_BLOG_POST_REQUEST,
+    NEW_BLOG_POST_SUCCESS,
+    NEW_BLOG_POST_FAIL
   } from '../constants/blogConstants';
   
   export const blogListReducer = (state = { blogPosts: [] }, action) => {
@@ -43,9 +51,26 @@ import {
       default:
         return state;
     }
-};
+  };
 
-export const blogCommentsListReducer = (state = { blogCommentsList: [] }, action) => {
+  export const newBlogPostReducer= (state = {}, action) => {
+    switch (action.type) {
+      case NEW_BLOG_POST_REQUEST:
+        return { loading: true, post: [] };
+      case NEW_BLOG_POST_SUCCESS:
+        return {
+          loading: false,
+          post: action.payload,
+        };
+        
+      case NEW_BLOG_POST_FAIL:
+        return { loading: false, error: action.payload };
+      default:
+        return state;
+    }
+  };
+
+  export const blogCommentsListReducer = (state = { blogCommentsList: [] }, action) => {
     switch (action.type) {
       case BLOG_COMMENTS_LIST_REQUEST:
         return { loadingComments: true, blogCommentsList: [] };
@@ -60,9 +85,9 @@ export const blogCommentsListReducer = (state = { blogCommentsList: [] }, action
       default:
         return state;
     }
-};
+  };
 
-export const blogNewCommentReducer = (state = {}, action) => {
+  export const blogNewCommentReducer = (state = {}, action) => {
     switch (action.type) {
       case BLOG_POST_REQUEST:
         return { loading: true };
@@ -78,4 +103,38 @@ export const blogNewCommentReducer = (state = {}, action) => {
       default:
         return state;
     }
+  };
+
+export const blogAuthor = (state = { authorData: [] }, action) => {
+  switch (action.type) {
+    case BLOG_AUTHOR_DATA_REQUEST:
+      return { loading: true, authorData: [] };
+    case BLOG_AUTHOR_DATA_SUCCESS:
+      return {
+      loading: false,
+      authorData: action.payload,
+    };
+      
+    case BLOG_AUTHOR_DATA_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
+};
+
+export const blogCoverImage = (state = { coverImage: [] }, action) => {
+  switch (action.type) {
+    case BLOG_COVER_IMAGE_REQUEST:
+      return { loading: true, coverImage: [] };
+    case BLOG_COVER_IMAGE_SUCCESS:
+      return {
+      loading: false,
+      coverImage: action.payload,
+    };
+      
+    case BLOG_COVER_IMAGE_FAIL:
+      return { loading: false, error: action.payload };
+    default:
+      return state;
+  }
 };

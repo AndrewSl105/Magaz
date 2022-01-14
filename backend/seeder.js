@@ -10,6 +10,8 @@ import Order from './models/orderModel.js'
 import connectDB from './config/db.js'
 import boards from './data/boards.js'
 import axios from 'axios';
+import BlogPost from './models/blogPostModel.js'
+import blogPosts from './data/blogPOsts.js'
 
 dotenv.config()
 
@@ -22,6 +24,10 @@ const importData = async () => {
     await User.deleteMany()
     await Board.deleteMany()
     await Product.deleteMany()
+    await BlogPost.deleteMany()
+
+    await BlogPost.insertMany(blogPosts)
+
     const createdUsers = await User.insertMany(users)
     const adminUser = createdUsers[0]._id;
     

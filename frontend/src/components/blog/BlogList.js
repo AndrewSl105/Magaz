@@ -58,6 +58,8 @@ export default function BlogList() {
   const { blogPosts, loading } = useSelector((state) => state.blog);
   const onScroll = useCallback(() => dispatch(getMorePosts()), [dispatch]);
 
+  console.log(blogPosts);
+
   const sortedPosts = applySort(blogPosts, filters);
 
   useEffect(() => {

@@ -7,9 +7,9 @@ import { alpha, styled } from '@material-ui/core/styles';
 import { Box, Card, Grid, Avatar, Typography, CardContent } from '@material-ui/core';
 import { fDate } from 'src/utils/formatTime';
 import { fShortenNumber } from 'src/utils/formatNumber';
-import { getFuturedImageData } from 'src/utils/getFeaturedImage';
 import SvgIconStyle from '../SvgIconStyle';
 import { PATH_PAGE } from 'src/routes/paths';
+import eyeFill from '@iconify/icons-eva/eye-fill';
 
 // ----------------------------------------------------------------------
 
@@ -65,17 +65,16 @@ BlogItem.propTypes = {
 };
 
 export default function BlogItem({ post, index }) {
-  const { title, comment, date, _embedded, id } = post;
+  const { title, createdAt, _id, coverImage, author, replies, seen } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
-  const linkTo = `${PATH_PAGE.blog.post}${id}`;
+  const linkTo = `${PATH_PAGE.blog.post}${_id}`;
 
   const POST_INFO = [
-    { number: comment, icon: messageCircleFill },
+    { number: replies.length, icon: messageCircleFill },
+    { number: seen, icon: eyeFill },
   ];
 
-  const wpPostData = getFuturedImageData(_embedded);
-  
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
       <Card sx={{ position: 'relative' }}>
@@ -113,8 +112,7 @@ export default function BlogItem({ post, index }) {
             }}
           />
           <AvatarStyle
-            alt={wpPostData.authorName}
-            src={wpPostData.authorUrl}
+            alt={author}
             sx={{
               ...((latestPostLarge || latestPost) && {
                 zIndex: 9,
@@ -126,7 +124,7 @@ export default function BlogItem({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src={wpPostData.url} />
+          <CoverImgStyle alt={title} src={coverImage} />
         </CardMediaStyle>
         <CardContent
           sx={{
@@ -139,7 +137,7 @@ export default function BlogItem({ post, index }) {
           }}
         >
           <Typography gutterBottom variant="caption" sx={{ color: 'text.disabled', display: 'block' }}>
-            {fDate(date)}
+            {fDate(createdAt)}
           </Typography>
 
           <TitleStyle 
@@ -151,7 +149,7 @@ export default function BlogItem({ post, index }) {
                 })
             }}
           >
-              {title.rendered}
+              {title}
           </TitleStyle>
 
           <InfoStyle>

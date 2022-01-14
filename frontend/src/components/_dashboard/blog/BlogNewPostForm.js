@@ -20,11 +20,13 @@ import {
 } from '@material-ui/core';
 // utils
 import fakeRequest from '../../../utils/fakeRequest';
+import { useDispatch, useSelector } from 'react-redux';
 //
 import { QuillEditor } from '../../editor';
 import { UploadSingleFile } from '../../upload';
 //
 import BlogNewPostPreview from './BlogNewPostPreview';
+import { newBlogPost } from '../../../redux/actions/blogActions'
 
 // ----------------------------------------------------------------------
 
@@ -55,6 +57,8 @@ const LabelStyle = styled(Typography)(({ theme }) => ({
 export default function BlogNewPostForm() {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
+
 
   const handleOpenPreview = () => {
     setOpen(true);
@@ -68,15 +72,14 @@ export default function BlogNewPostForm() {
     title: Yup.string().required('Title is required'),
     description: Yup.string().required('Description is required'),
     content: Yup.string().min(1000).required('Content is required'),
-    cover: Yup.mixed().required('Cover is required')
+    coverImage: Yup.mixed()
   });
 
   const formik = useFormik({
     initialValues: {
       title: '',
-      description: '',
       content: '',
-      cover: null,
+      coverImage: '',
       tags: ['Logan'],
       publish: true,
       comments: true,
@@ -86,8 +89,9 @@ export default function BlogNewPostForm() {
     },
     validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
+      console.log(values)
       try {
-        await fakeRequest(500);
+        dispatch(newBlogPost(values))
         resetForm();
         handleClosePreview();
         setSubmitting(false);
@@ -100,6 +104,7 @@ export default function BlogNewPostForm() {
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
+
 
   const handleDrop = useCallback(
     (acceptedFiles) => {
@@ -130,17 +135,6 @@ export default function BlogNewPostForm() {
                     helperText={touched.title && errors.title}
                   />
 
-                  <TextField
-                    fullWidth
-                    multiline
-                    minRows={3}
-                    maxRows={5}
-                    label="Description"
-                    {...getFieldProps('description')}
-                    error={Boolean(touched.description && errors.description)}
-                    helperText={touched.description && errors.description}
-                  />
-
                   <div>
                     <LabelStyle>Content</LabelStyle>
                     <QuillEditor
@@ -161,13 +155,13 @@ export default function BlogNewPostForm() {
                     <UploadSingleFile
                       maxSize={3145728}
                       accept="image/*"
-                      file={values.cover}
+                      file={values.coverImage}
                       onDrop={handleDrop}
-                      error={Boolean(touched.cover && errors.cover)}
+                      error={Boolean(touched.coverImage && errors.coverImage)}
                     />
-                    {touched.cover && errors.cover && (
+                    {touched.coverImage && errors.coverImage && (
                       <FormHelperText error sx={{ px: 2 }}>
-                        {touched.cover && errors.cover}
+                        {touched.coverImage && errors.coverImage}
                       </FormHelperText>
                     )}
                   </div>

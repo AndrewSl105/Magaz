@@ -9,5 +9,4 @@ import { protect} from '../middleware/authMiddleware.js'
 
 router.route('/').post(protect, addBoard).get(getBoards)
 
-
 export default router

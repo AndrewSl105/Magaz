@@ -22,7 +22,7 @@ import {
 } from './reducers/userReducers';
 
 import { userLoginReducer } from './reducers/userReducers';
-import { blogCommentsListReducer, blogListReducer, blogNewCommentReducer, blogPostReducer } from './reducers/blogReducer';
+import { blogAuthor, blogCommentsListReducer, blogCoverImage, blogListReducer, blogNewCommentReducer, blogPostReducer, newBlogPostReducer } from './reducers/blogReducer';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +47,9 @@ const rootReducer = combineReducers({
   blogPost: blogPostReducer,
   blogComments: blogCommentsListReducer,
   blogNewComment: blogNewCommentReducer,
+  blogCoverImage: blogCoverImage,
+  blogAuthor: blogAuthor,
+  newBlogPost: newBlogPostReducer,
   user: userReducer,
   productList: productListReducer,
   categories: categoriesListReducer,

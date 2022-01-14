@@ -149,7 +149,7 @@ export default function Router() {
     // Main Routes
     {
       path: '*',
-      element: <LogoOnlyLayout />,
+      element: <MainLayout />,
       children: [
         { path: 'coming-soon', element: <ComingSoon /> },
         { path: 'products/category/:value/', element: <ProductsScreen /> },
