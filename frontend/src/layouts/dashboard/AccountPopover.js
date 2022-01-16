@@ -17,7 +17,8 @@ import useIsMountedRef from '../../hooks/useIsMountedRef';
 import { MIconButton } from '../../components/@material-extend';
 import MyAvatar from '../../components/MyAvatar';
 import MenuPopover from '../../components/MenuPopover';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from 'src/redux/actions/userActions';
 
 // ----------------------------------------------------------------------
 
@@ -42,11 +43,11 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const dispatch = useDispatch();
   const anchorRef = useRef(null);
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const isMountedRef = useIsMountedRef();
-  const { user, logout } = useAuth();
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
   const [open, setOpen] = useState(false);
@@ -60,11 +61,7 @@ export default function AccountPopover() {
 
   const handleLogout = async () => {
     try {
-      await logout();
-      navigate('/');
-      if (isMountedRef.current) {
-        handleClose();
-      }
+      dispatch(logout())
     } catch (error) {
       console.error(error);
       enqueueSnackbar('Unable to logout', { variant: 'error' });

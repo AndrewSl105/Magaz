@@ -1,6 +1,8 @@
 // routes
 import Router from './routes';
+import { useEffect } from 'react';
 // theme
+import { useDispatch } from 'react-redux';
 import ThemeConfig from './theme';
 // hooks
 import useAuth from './hooks/useAuth';
@@ -15,9 +17,17 @@ import NotistackProvider from './components/NotistackProvider';
 import ThemePrimaryColor from './components/ThemePrimaryColor';
 import ThemeLocalization from './components/ThemeLocalization';
 
+import { checkAutoLogin } from './services/authService';
+
 // ----------------------------------------------------------------------
 
 export default function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    checkAutoLogin(dispatch);
+}, [dispatch]);
+
   const { isInitialized } = useAuth();
 
   return (

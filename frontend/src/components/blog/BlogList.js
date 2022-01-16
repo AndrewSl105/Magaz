@@ -28,10 +28,10 @@ const SORT_OPTIONS = [
 
 const applySort = (posts, sortBy) => {
   if (sortBy === 'latest') {
-    return orderBy(posts, ['date'], ['desc']);
+    return orderBy(posts, ['createdAt'], ['desc']);
   }
   if (sortBy === 'oldest') {
-    return orderBy(posts, ['date'], ['asc']);
+    return orderBy(posts, ['createdAt'], ['asc']);
   }
   return posts;
 };
@@ -57,8 +57,6 @@ export default function BlogList() {
   const [filters, setFilters] = useState('latest');
   const { blogPosts, loading } = useSelector((state) => state.blog);
   const onScroll = useCallback(() => dispatch(getMorePosts()), [dispatch]);
-
-  console.log(blogPosts);
 
   const sortedPosts = applySort(blogPosts, filters);
 

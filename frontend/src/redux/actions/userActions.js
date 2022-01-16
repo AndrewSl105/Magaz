@@ -71,7 +71,6 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_DETAILS_RESET })
   dispatch({ type: ORDER_LIST_MY_RESET })
   dispatch({ type: USER_LIST_RESET })
-  document.location.href = '/login'
 }
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -204,6 +203,8 @@ export const listUsers = () => async (dispatch, getState) => {
       userLogin: { userInfo },
     } = getState()
 
+    console.log(userInfo)
+
     const config = {
       headers: {
         Authorization: `Bearer ${userInfo.token}`,
@@ -216,6 +217,7 @@ export const listUsers = () => async (dispatch, getState) => {
       type: USER_LIST_SUCCESS,
       payload: data,
     })
+
   } catch (error) {
     const message =
       error.response && error.response.data.message

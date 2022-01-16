@@ -1,7 +1,7 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { useSnackbar } from 'notistack5';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -38,6 +38,7 @@ export default function LoginForm() {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar();
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -65,8 +66,11 @@ export default function LoginForm() {
         if (isMountedRef.current) {
           setSubmitting(false);
         }
+        navigate('/');
+
       } catch (error) {
         console.error(error);
+         
         resetForm();
         if (isMountedRef.current) {
           setSubmitting(false);

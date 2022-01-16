@@ -8,6 +8,7 @@ import { Box, Link, Grid, List, Stack, Popover, ListItem, ListSubheader, ListIte
 import arrowIosUpwardFill from '@iconify/icons-eva/arrow-ios-upward-fill';
 import arrowIosDownwardFill from '@iconify/icons-eva/arrow-ios-downward-fill';
 import { useSelector } from 'react-redux';
+import AccountPopover from '../dashboard/AccountPopover'
 
 // ----------------------------------------------------------------------
 
@@ -65,10 +66,11 @@ function MenuDesktopItem({ item, pathname, isHome, isOpen, isOffset, onOpen, onC
   const isActive = pathname === path;
 
   const userLogin = useSelector((state) => state.userLogin);
-console.log(isOffset);
+  const { userInfo } = userLogin;
+
   if (children) {
     return (
-      <div key={title}>
+      <div style={{display: 'flex', alignItems: 'center'}} key={title}>
         <LinkStyle
           onClick={onOpen}
           sx={{
@@ -119,8 +121,8 @@ console.log(isOffset);
                       disableGutters
                       sx={{
                         display: 'flex',
-                        lineHeight: 'unset',
                         alignItems: 'center',
+                        lineHeight: 'unset',
                         color: 'text.primary',
                         typography: 'overline'
                       }}
@@ -129,6 +131,7 @@ console.log(isOffset);
                     </ListSubheader>
 
                     {items.map((item) => (
+
                       <ListItem
                         key={item.title}
                         to={item.path}
@@ -162,18 +165,23 @@ console.log(isOffset);
   }
 
   return (
-    <LinkStyle
-      to={path}
-      component={RouterLink}
-      sx={{
-        ...(isHome && { color: 'common.white' }),
-        ...(isOffset && { color: 'text.primary' }),
-        ...(isActive && { color: 'primary.main' }),
-      }}
-    >
-      <ListItemIcon>{icon}</ListItemIcon>
-      {title}
-    </LinkStyle>
+    <>
+      {
+        title === 'Log In' && userInfo ? <AccountPopover /> :
+        <LinkStyle
+          to={path}
+          component={RouterLink}
+          sx={{
+            ...(isHome && { color: 'common.white' }),
+            ...(isOffset && { color: 'text.primary' }),
+            ...(isActive && { color: 'primary.main' }),
+          }}
+          >
+            <ListItemIcon>{icon}</ListItemIcon>
+          {title}
+        </LinkStyle>
+      }
+    </>
   );
 }
 

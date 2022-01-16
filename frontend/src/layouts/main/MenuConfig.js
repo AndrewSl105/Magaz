@@ -2,9 +2,10 @@ import BookIcon from '@material-ui/icons/Book';
 import CategoryIcon from '@material-ui/icons/Category';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DashboardIcon from '@material-ui/icons/Dashboard';
 
 // routes
-import { PATH_AUTH, PATH_PAGE } from '../../routes/paths';
+import { PATH_AUTH, PATH_PAGE, PATH_DASHBOARD  } from '../../routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -103,10 +104,16 @@ const menuConfig = [
     path: PATH_PAGE.blog.posts,
   },
   {
+    title: 'Dashboard',
+    icon: <DashboardIcon />,
+    path: PATH_DASHBOARD.root,
+  },
+  {
     title: 'Log In',
     icon: <AccountCircleIcon />,
     path: PATH_AUTH.login,
   }
+  
 ];
 
 export default menuConfig;

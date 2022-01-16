@@ -103,6 +103,7 @@ export default function BlogNewPostForm() {
           metaKeywords: values.metaKeywords,
           enableComments: true
         }))
+        
         handleClosePreview();
         setSubmitting(false);
         enqueueSnackbar('Post success', { variant: 'success' });

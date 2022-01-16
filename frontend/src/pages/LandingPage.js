@@ -5,6 +5,7 @@ import { Card, CardHeader, CardContent } from '@material-ui/core';
 import Page from '../components/Page';
 import { CarouselAnimation, CarouselCenterMode } from 'src/components/carousel';
 import Space from 'src/components/Space';
+import Users from './users';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Page)({
@@ -37,6 +38,12 @@ export default function LandingPage() {
           <CardHeader title="Carousel Animation" />
           <CardContent>
             <CarouselAnimation />
+          </CardContent>
+      </Card>
+      <Card>
+          <CardHeader title="Carousel Animation" />
+          <CardContent>
+            <Users />
           </CardContent>
       </Card>
     </RootStyle>
