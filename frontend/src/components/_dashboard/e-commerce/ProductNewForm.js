@@ -26,7 +26,6 @@ import {
   InputAdornment,
   FormHelperText,
   FormControlLabel,
-  imageListItemBarClasses
 } from '@material-ui/core';
 // utils
 // routes
@@ -36,8 +35,8 @@ import { QuillEditor } from '../../editor';
 import { UploadMultiFile } from '../../upload';
 import { useDispatch, useSelector } from 'react-redux';
 import { createProduct } from 'src/redux/actions/productActions';
-import { uploadFile }  from 'react-s3';
 import { Button } from '@material-ui/core';
+import { uploadToAws } from 'src/utils/awsUtils/uploadToAws';
 
 // ----------------------------------------------------------------------
 
@@ -71,7 +70,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   
   const productCreate = useSelector((state) => state.productCreate)
   const { success, error } = productCreate;
-  console.log(success);
 
   useEffect(() => {
     dispatch(listCategories())
@@ -91,18 +89,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     price: Yup.number().required('Price is required')
   });
 
-  const S3_BUCKET ='shopimagescommerce';
-  const REGION ='eu-central-1';
-  const ACCESS_KEY ='AKIASET7NWTOSZKCTFGF';
-  const SECRET_ACCESS_KEY ='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';
-
-  const config = {
-    bucketName: S3_BUCKET,
-    region: REGION,
-    accessKeyId: ACCESS_KEY,
-    secretAccessKey: SECRET_ACCESS_KEY,
-  }
-
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
@@ -120,15 +106,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     },
     validationSchema: NewProductSchema,
     onSubmit: async (values, { setSubmitting, resetForm, setErrors }) => {
-
-      const handleUpload = async (file) => {
-        return await uploadFile(file, config).then(result => result) || null;
-      }
-
-      const getImage = await handleUpload(values.images[0]);
+      const getImage = await uploadToAws(values.images[0]);
       const urls = imagesUrls.map(el => el.path) || [];
       const gallery = [...urls, getImage.location];
-      console.log(gallery);
 
       try {
           dispatch(createProduct({
@@ -143,6 +123,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
             hashtags: values.tags,
             visibility: values.visibility
           }));
+
             setSubmitting(false);
             setImagesUrls([]);
             enqueueSnackbar(!isEdit ? 'Create success' : 'Update success', { variant: 'success' });
@@ -158,7 +139,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   });
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
-  console.log(values)
 
   const handleDrop = useCallback(
     (acceptedFiles) => {

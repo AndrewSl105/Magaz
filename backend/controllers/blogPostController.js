@@ -5,19 +5,20 @@ import BlogPost from '../models/blogPostModel.js'
 // @route   POST /api/orders
 // @access  Private
 const addBlogPost = asyncHandler(async (req, res) => {
-    const post = new Board({
-        title: req.title,
-        coverImage: req.coverImage,
-        content: req.content,
-        author: req.author,
+    const post = new BlogPost({
+        user: req.user._id,
+        title: req.body.title,
+        coverImage: req.body.coverImage,
+        content: req.body.content,
+        author: req.user.name,
         rating: 0,
         seen: 0,
-        metaTitle: req.metaTitle,
-        metaDescription: req.metaDescription,
-        tags: req.tags,
-        metaKeywords: req.metaKeywords,
-        publish: req.publish,
-        enableComments: req.enableComments,
+        metaTitle: req.body.metaTitle,
+        metaDescription: req.body.metaDescription,
+        tags: req.body.tags,
+        metaKeywords: req.body.metaKeywords,
+        publish: req.body.publish,
+        enableComments: req.body.enableComments,
         replies: []
     })
     const createdPost = await post.save()

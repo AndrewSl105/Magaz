@@ -19,14 +19,14 @@ import {
   FormControlLabel
 } from '@material-ui/core';
 // utils
-import fakeRequest from '../../../utils/fakeRequest';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 //
 import { QuillEditor } from '../../editor';
 import { UploadSingleFile } from '../../upload';
 //
 import BlogNewPostPreview from './BlogNewPostPreview';
 import { newBlogPost } from '../../../redux/actions/blogActions'
+import { uploadToAws } from 'src/utils/awsUtils/uploadToAws';
 
 // ----------------------------------------------------------------------
 
@@ -70,29 +70,39 @@ export default function BlogNewPostForm() {
 
   const NewBlogSchema = Yup.object().shape({
     title: Yup.string().required('Title is required'),
-    description: Yup.string().required('Description is required'),
     content: Yup.string().min(1000).required('Content is required'),
-    coverImage: Yup.mixed()
+    cover: Yup.mixed().required('Cover is required')
   });
 
   const formik = useFormik({
     initialValues: {
       title: '',
       content: '',
-      coverImage: '',
+      coverImage: null,
       tags: ['Logan'],
       publish: true,
       comments: true,
       metaTitle: '',
       metaDescription: '',
-      metaKeywords: ['Logan']
+      metaKeywords: ['Logan'],
+      enableComments: true
     },
-    validationSchema: NewBlogSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
-      console.log(values)
+     const getImage = await uploadToAws(values.coverImage);
+
       try {
-        dispatch(newBlogPost(values))
-        resetForm();
+        dispatch(newBlogPost({
+          title: values.title,
+          content: values.content,
+          coverImage: getImage.location,
+          tags: values.tags,
+          publish: true,
+          comments: true,
+          metaTitle: values.metaTitle,
+          metaDescription: values.metaDescription,
+          metaKeywords: values.metaKeywords,
+          enableComments: true
+        }))
         handleClosePreview();
         setSubmitting(false);
         enqueueSnackbar('Post success', { variant: 'success' });
@@ -105,15 +115,11 @@ export default function BlogNewPostForm() {
 
   const { errors, values, touched, handleSubmit, isSubmitting, setFieldValue, getFieldProps } = formik;
 
-
   const handleDrop = useCallback(
     (acceptedFiles) => {
       const file = acceptedFiles[0];
       if (file) {
-        setFieldValue('cover', {
-          ...file,
-          preview: URL.createObjectURL(file)
-        });
+        setFieldValue('coverImage', file);
       }
     },
     [setFieldValue]

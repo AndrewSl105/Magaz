@@ -70,14 +70,22 @@ export const blogPost = (id) => async (
 
 
 export const newBlogPost = (values) => async (
-  dispatch
+  dispatch, getState
 ) => {
   try {
     dispatch({ type: NEW_BLOG_POST_REQUEST })
 
-    const { data } = await axios.post(`/api/blogposts`, values);
+    const {
+      userLogin: { userInfo },
+    } = getState()
 
-    console.log(values);
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.post(`/api/blogposts`, values, config);
   
     dispatch({
       type: NEW_BLOG_POST_SUCCESS,
